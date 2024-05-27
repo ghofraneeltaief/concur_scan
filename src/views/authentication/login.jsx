@@ -32,7 +32,7 @@ const Login = () => {
         }
       })
       .then((token) => {
-        localStorage.setItem('token', token);
+        localStorage.setItem('access_token', token);
         // Afficher la boîte de dialogue de succès avec le bouton "Ok" masqué
         Swal.fire({
           icon: 'success',

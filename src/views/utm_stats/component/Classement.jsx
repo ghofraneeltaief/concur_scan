@@ -21,15 +21,25 @@ function Classement() {
   const [pageList, setPageList] = useState([]);
   const [selectedConcurrent, setSelectedConcurrent] = useState(null);
   const [selectedPage, setSelectedPage] = useState(null);
+  /* begin: get token */
+  async function getToken() {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      return token;
+    } else {
+      throw new Error('No token available');
+    }
+  }
+  /* END: get token */
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const hp_cs_authorization = localStorage.getItem('access_token');
+        const token = await getToken();
+        const responseObject = JSON.parse(token);
+        const accessToken = responseObject.access_token;
         const [concurrentsResponse, pagesResponse] = await Promise.all([
-          axios.get(
-            `${BASE_URL}/${api_version}/competitors?hp_cs_authorization=${hp_cs_authorization}`,
-          ),
-          axios.get(`${BASE_URL}/${api_version}/pages?hp_cs_authorization=${hp_cs_authorization}`),
+          axios.get(`${BASE_URL}/${api_version}/competitors?hp_cs_authorization=${accessToken}`),
+          axios.get(`${BASE_URL}/${api_version}/pages?hp_cs_authorization=${accessToken}`),
         ]);
         const concurrents = concurrentsResponse.data.map((concurrent) => ({
           competitor_id: concurrent.competitor_id,
@@ -81,6 +91,7 @@ function Classement() {
   const filteredPageList = selectedConcurrent
     ? pageList.filter((page) => page.fk_competitor_id === selectedConcurrent.competitor_id)
     : pageList;
+
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>

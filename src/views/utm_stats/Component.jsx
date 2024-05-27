@@ -87,7 +87,18 @@ function Component({
     currentDate.getMonth() - 1,
     currentDate.getDate(),
   );
-
+ /* Begin: Style select */
+ const ITEM_HEIGHT = 30;
+ const ITEM_PADDING_TOP = 8;
+ const MenuProps = {
+   PaperProps: {
+     style: {
+       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+       width: 270,
+     },
+   },
+ };
+ /* End: Style select */
   return (
     <>
     <Typography variant="h6" mb={3}>
@@ -106,7 +117,14 @@ function Component({
             }))}
             value={selectedVertical}
             onChange={handleVerticalSelect}
-            placeholder="Choisir"
+            name="Verticale"
+            placeholder="Verticales"
+            isSearchable={true}
+            MenuProps={MenuProps}
+            className="basic-single"
+            classNamePrefix="select"
+            menuPortalTarget={document.body}
+            menuPosition={'fixed'}
           />
         </Grid>
         <Grid item xs={3.6}>

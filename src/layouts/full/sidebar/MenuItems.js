@@ -3,28 +3,26 @@
 import { uniqueId } from 'lodash';
 
 const Menuitems = [
+  
   {
-    navlabel: true,
-    subheader: 'UTM Stats',
+    id: uniqueId(),
+    title: 'Dashboard',
+    href: '/Dashboard',
   },
   {
     id: uniqueId(),
-    title: 'Lead Count',
-    href: '/LeadCount',
+    title: 'Gestion Keywords',
+    href: '/Keywords',
   },
   {
     id: uniqueId(),
-    title: 'Ad Platform',
-    href: '/AdPlatform',
-  },
-  {
-    navlabel: true,
-    subheader: 'Pioche',
+    title: 'Gestion Pages',
+    href: '/Pages',
   },
   {
     id: uniqueId(),
-    title: 'Pioche',
-    href: '/Pioche',
+    title: 'Gestion Concurrents',
+    href: '/Concurrents',
   },
 ];
 

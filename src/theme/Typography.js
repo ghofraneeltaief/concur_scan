@@ -33,6 +33,11 @@ const typography = {
     fontSize: '1rem',
     lineHeight: '1.2rem',
   },
+  h7: {
+    fontWeight: 600,
+    fontSize: '14px',
+    lineHeight: '1.2rem',
+  },
   button: {
     textTransform: 'capitalize',
     fontWeight: 400,

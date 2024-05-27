@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Button } from '@mui/material';
 import Select from 'react-select';
-import '../pioche/components/selection.css';
+import './selection.css';
 import { BASE_URL, api_version } from '../authentication/config';
 import { FaFileExport } from 'react-icons/fa';
 import { ImLoop2 } from 'react-icons/im';
@@ -90,6 +90,9 @@ function Component({
 
   return (
     <>
+    <Typography variant="h6" mb={3}>
+    Benchmark Concurrentiel - Facebook
+          </Typography>
       <Grid container spacing={3}>
         <Grid item xs={4.4}>
           <Typography variant="h6" mb={1}>
@@ -130,14 +133,6 @@ function Component({
               />
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={4} display={'flex'} alignItems={'center'}>
-          <Button variant="contained" onClick={handleRecalculate} sx={{ marginRight: '10px' }}>
-            <ImLoop2 /> <Typography sx={{ paddingLeft: '7px' }}>Recalculer</Typography>
-          </Button>
-          <Button variant="contained" color="success">
-            <FaFileExport /> <Typography sx={{ paddingLeft: '7px' }}>Exporter</Typography>
-          </Button>
         </Grid>
       </Grid>
     </>

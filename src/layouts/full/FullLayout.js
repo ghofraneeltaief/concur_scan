@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { styled, Container, Box } from '@mui/material';
+import { styled, Container, Box, Grid } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 
@@ -50,21 +50,17 @@ const FullLayout = () => {
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
-        <Container sx={{
-          paddingTop: "20px",
-          maxWidth: '1200px',
-        }}
-        >
+        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" paddingLeft={5} paddingTop={4}>
           {/* ------------------------------------------- */}
           {/* Page Route */}
           {/* ------------------------------------------- */}
-          <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>
+          <Box gridColumn="span 11" sx={{ minHeight: 'calc(100vh - 170px)' }}>
             <Outlet />
           </Box>
           {/* ------------------------------------------- */}
           {/* End Page */}
           {/* ------------------------------------------- */}
-        </Container>
+        </Box>
       </PageWrapper>
     </MainWrapper>
   );

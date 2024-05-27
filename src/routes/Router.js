@@ -4,10 +4,11 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 /* ****Pages***** */
-const Pioche = Loadable(lazy(() => import('../views/pioche/Pioche')))
+const Gestion_pages = Loadable(lazy(() => import('../views/utm_stats/Gestion_pages')))
+const Gestion_concurrents = Loadable(lazy(() => import('../views/utm_stats/Gestion_concurrents')))
 const Login = Loadable(lazy(() => import('../views/authentication/login')))
-const AdPlateform = Loadable(lazy(() => import('../views/utm_stats/AdPlateform')))
-const LeadCount = Loadable(lazy(() => import('../views/utm_stats/LeadCount')))
+const Gestion_keywords = Loadable(lazy(() => import('../views/utm_stats/Gestion_keywords')))
+const Dashboard = Loadable(lazy(() => import('../views/utm_stats/Dashboard')))
 // Fonction pour vérifier l'authentification de l'utilisateur
 const isAuthenticated = () => {
   // Vérifie si le token est présent dans le localStorage et s'il est valide
@@ -35,27 +36,35 @@ const Router = [
     ],
   },
   {
-    path: '/AdPlatform',
+    path: '/Keywords',
     element: <PrivateRoute />,
     children: [
-      { path: '/AdPlatform', exact: true, element: <AdPlateform /> },
-      { path: '*', element: <Navigate to="/AdPlatform/404" /> },
+      { path: '/Keywords', exact: true, element: <Gestion_keywords /> },
+      { path: '*', element: <Navigate to="/Keywords/404" /> },
     ],
   },
   {
-    path: '/LeadCount',
+    path: '/Dashboard',
     element: <PrivateRoute />,
     children: [
-      { path: '/LeadCount', exact: true, element: <LeadCount /> },
-      { path: '*', element: <Navigate to="/LeadCount/404" /> },
+      { path: '/Dashboard', exact: true, element: <Dashboard /> },
+      { path: '*', element: <Navigate to="/Dashboard/404" /> },
     ],
   },
   {
-    path: '/Pioche',
+    path: '/Pages',
     element: <PrivateRoute />,
     children: [
-      { path: '/Pioche', exact: true, element: <Pioche /> },
-      { path: '*', element: <Navigate to="/Pioche/404" /> },
+      { path: '/Pages', exact: true, element: <Gestion_pages /> },
+      { path: '*', element: <Navigate to="/Pages/404" /> },
+    ],
+  },
+  {
+    path: '/Concurrents',
+    element: <PrivateRoute />,
+    children: [
+      { path: '/Concurrents', exact: true, element: <Gestion_concurrents /> },
+      { path: '*', element: <Navigate to="/Concurrents/404" /> },
     ],
   },
 ];

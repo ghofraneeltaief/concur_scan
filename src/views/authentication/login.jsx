@@ -45,7 +45,7 @@ const Login = () => {
           timer: 1000, // Fermer automatiquement après 10 secondes
           //timerProgressBar: true // Afficher une barre de progression du temps restant
         }).then(() => {
-          navigate('/Pioche');
+          navigate('/Dashboard');
         });
       })
       .catch((error) => {

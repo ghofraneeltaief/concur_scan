@@ -12,7 +12,7 @@ const Dashboard = Loadable(lazy(() => import('../views/utm_stats/Dashboard')))
 // Fonction pour vérifier l'authentification de l'utilisateur
 const isAuthenticated = () => {
   // Vérifie si le token est présent dans le localStorage et s'il est valide
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('token');
   return token !== null && token !== undefined && token !== '';
 };
 const PrivateRoute = ({ element, ...rest }) => {

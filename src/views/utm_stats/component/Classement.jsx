@@ -23,7 +23,7 @@ function Classement() {
   const [selectedPage, setSelectedPage] = useState(null);
   /* begin: get token */
   async function getToken() {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     if (token) {
       return token;
     } else {

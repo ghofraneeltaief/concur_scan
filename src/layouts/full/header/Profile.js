@@ -21,7 +21,7 @@ const Profile = () => {
   };
   const handleLogout = () => {
     // Effacez les informations d'identification stockées dans le local storage ou les cookies
-    localStorage.removeItem('access_token'); // Supprimer le jeton d'accès du local storage
+    localStorage.removeItem('token'); // Supprimer le jeton d'accès du local storage
     // Redirigez l'utilisateur vers la page de connexion ou la page d'accueil
     window.location.href = '/login'; // Redirection vers la page de connexion
   };

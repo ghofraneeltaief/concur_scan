@@ -3,13 +3,14 @@ import { Grid, Button } from '@mui/material';
 import { BASE_URL, api_version } from './config';
 import logo from '../../assets/images/logos/logo.png';
 import logo_2 from '../../assets/images/logos/logo-2.png';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate depuis React Router
+import { useNavigate } from 'react-router-dom';
 import './login.css';
-import Box from '@mui/material/Box'; // Importer Box de Material-UI pour ajouter de l'espace
+import Box from '@mui/material/Box';
 import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
-const Login = () => {
-  const navigate = useNavigate(); // Utiliser useNavigate pour la navigation
+
+function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,9 +31,10 @@ const Login = () => {
         } else {
           throw new Error('');
         }
+        
       })
       .then((token) => {
-        localStorage.setItem('access_token', token);
+        localStorage.setItem('token', token);
         // Afficher la boîte de dialogue de succès avec le bouton "Ok" masqué
         Swal.fire({
           icon: 'success',
@@ -61,7 +63,6 @@ const Login = () => {
         setError(error.message);
       });
   };
-  
   return (
     <Grid container className="centered-container">
       {/* Begin:: card canal */}
@@ -116,5 +117,5 @@ const Login = () => {
       </Grid>
     </Grid>
   );
-};
+}
 export default Login;

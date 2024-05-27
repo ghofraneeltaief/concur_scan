@@ -30,7 +30,7 @@ function Keywords() {
   const [selectedKeywords, setSelectedKeywords] = useState([]);
 
   async function getToken() {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     if (token) {
       return token;
     } else {

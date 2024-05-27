@@ -22,6 +22,7 @@ class Cible extends React.Component {
             stacked: true,
             stackType: '300%'
           },
+          colors: ['#58A9FB', '#ED4B82'],
           responsive: [{
             breakpoint: 480,
             options: {

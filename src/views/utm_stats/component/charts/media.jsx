@@ -29,10 +29,10 @@ class Media extends React.Component {
         legend: {
           position: 'bottom',
           horizontalAlign: 'center',
-          show: true,
+          show: true, 
         },
         labels: ['Image', 'Vidéo', 'Caroussel'], // Add labels
-        colors: ['#f1c40f', '#2ecc71', '#3498db'], // Add custom colors
+        colors: ['#f1c40f', '#2ecc71', '#6577F3'], // Add custom colors
         responsive: [{
           breakpoint: 480,
           options: {

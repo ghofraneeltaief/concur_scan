@@ -6,6 +6,7 @@ import { BASE_URL, api_version } from '../../authentication/config';
 import Swal from 'sweetalert2';
 import Cible from './charts/Cible'; 
 import Repartition from './charts/Repartition'; 
+import Periode from './charts/Periode'; 
 
 function Charts() {
   return (
@@ -37,21 +38,9 @@ function Charts() {
           </Box>
           <Box gridColumn="span 8">
             <DashboardCard
-              title="Radiateur Éco Hiver // Voir le prix"
-              subtitle="Fabriqués en France"
+              title="Période activation"
             >
-              <Typography>
-                Découvrez les nouveaux radiateurs hiver 2024 !Ces nouveaux radiateurs diffusent la
-                chaleur de manière efficace, vous permettant de profiter d’un chauffage prolongé
-                sans pour autant augmenter vos factures.Vous pouvez réaliser jusqu’à 45% d’économies
-                sur vos factures par rapport à des radiateurs anciens. Ils existent en 2 coloris,
-                noir mat et blanc nacré et sont 100% fabriqués en France !Cliquez dès maintenant
-                pour voir le prix des radiateurs{' '}
-              </Typography>
-              <Box mt={2}>
-                <Button variant="contained">Voir détail</Button>
-              </Box>
-              <img></img>
+              <Periode/>
             </DashboardCard>
           </Box>
           <Box gridColumn="span 8">

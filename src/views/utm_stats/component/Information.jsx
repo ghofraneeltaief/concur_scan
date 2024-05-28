@@ -75,7 +75,10 @@ function Information({ selectedVerticalId,
             <DashboardCard
               title="Cible"
             >
-              <Cible/>
+              <Cible selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage}/>
             </DashboardCard>
           </Box>
         </Box>

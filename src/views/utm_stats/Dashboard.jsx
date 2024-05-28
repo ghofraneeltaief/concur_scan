@@ -109,7 +109,10 @@ function Dashboard() {
             selectedPage={selectedPage}/>
             </Box>
             <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-              <Crea />
+              <Crea selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage}/>
             </Box>
             <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
               <Information selectedVerticalId={selectedVerticalId}

@@ -319,7 +319,7 @@ function Pages() {
     { field: 'id', headerName: 'ID', width: 250, align: 'center', headerAlign: 'center' },
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: 'Nom',
       editable: true,
       width: 250,
       align: 'center',
@@ -327,7 +327,7 @@ function Pages() {
     },
     {
       field: 'vertical',
-      headerName: 'Vertical',
+      headerName: 'Verticale',
       editable: true,
       width: 250,
       align: 'center',
@@ -358,7 +358,18 @@ function Pages() {
       ),
     },
   ];
-
+  /* Begin: Style select */
+  const ITEM_HEIGHT = 30;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 270,
+      },
+    },
+  };
+  /* End: Style select */
   return (
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Gestion Pages">
@@ -389,7 +400,7 @@ function Pages() {
           <Box mb={2}>
             <TextField
               id="outlined-basic"
-              label="Name"
+              label="Nom"
               name="name"
               value={newRowData.name}
               onChange={handleInputChange}
@@ -416,6 +427,7 @@ function Pages() {
                 value={newRowData.vertical}
                 onChange={handleSelectChange}
                 fullWidth
+                MenuProps={MenuProps}
               >
                 {verticals.map((vertical) => (
                   <MenuItem key={vertical.vertical_id} value={vertical.vertical_id}>
@@ -433,6 +445,7 @@ function Pages() {
                 value={newRowData.competitor}
                 onChange={handleSelectChange}
                 fullWidth
+                MenuProps={MenuProps}
               >
                 {competitors.map((competitor) => (
                   <MenuItem key={competitor.competitor_id} value={competitor.competitor_id}>
@@ -470,7 +483,7 @@ function Pages() {
           <Box mb={2}>
             <TextField
               id="outlined-basic"
-              label="Name"
+              label="Nom"
               name="name"
               value={selectedRowData.name}
             onChange={handleEditInputChange}
@@ -528,7 +541,7 @@ function Pages() {
               variant="contained"
               color="error"
               style={{ marginRight: '10px' }}
-              onClick={handleClose}
+              onClick={handleCloseEditDialog}
             >
               <Typography>Annuler</Typography>
             </Button>

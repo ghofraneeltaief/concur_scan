@@ -11,8 +11,8 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Gestion Keywords',
-    href: '/Keywords',
+    title: 'Gestion Angles',
+    href: '/Angles',
   },
   {
     id: uniqueId(),

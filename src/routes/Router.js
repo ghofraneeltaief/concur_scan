@@ -7,7 +7,7 @@ const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const Gestion_pages = Loadable(lazy(() => import('../views/utm_stats/Gestion_pages')))
 const Gestion_concurrents = Loadable(lazy(() => import('../views/utm_stats/Gestion_concurrents')))
 const Login = Loadable(lazy(() => import('../views/authentication/login')))
-const Gestion_keywords = Loadable(lazy(() => import('../views/utm_stats/Gestion_keywords')))
+const Gestion_Angles = Loadable(lazy(() => import('../views/utm_stats/Gestion_Angles')))
 const Dashboard = Loadable(lazy(() => import('../views/utm_stats/Dashboard')))
 // Fonction pour vérifier l'authentification de l'utilisateur
 const isAuthenticated = () => {
@@ -36,11 +36,11 @@ const Router = [
     ],
   },
   {
-    path: '/Keywords',
+    path: '/Angles',
     element: <PrivateRoute />,
     children: [
-      { path: '/Keywords', exact: true, element: <Gestion_keywords /> },
-      { path: '*', element: <Navigate to="/Keywords/404" /> },
+      { path: '/Angles', exact: true, element: <Gestion_Angles /> },
+      { path: '*', element: <Navigate to="/Angles/404" /> },
     ],
   },
   {

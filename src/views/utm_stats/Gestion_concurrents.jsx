@@ -180,7 +180,7 @@ const Concurrent = () => {
     { field: 'id', headerName: 'ID', width: 250, align: 'center', headerAlign: 'center' },
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: 'Nom',
       editable: true,
       width: 250,
       align: 'center',
@@ -237,16 +237,7 @@ const Concurrent = () => {
             <Box mb={2}>
               <TextField
                 name="name"
-                label="Name"
-                fullWidth
-                onChange={handleInputChange}
-                sx={{ marginTop: '10px', marginBottom: '10px' }}
-              />
-            </Box>
-            <Box>
-              <TextField
-                name="country_id"
-                label="Country ID"
+                label="Nom"
                 fullWidth
                 onChange={handleInputChange}
                 sx={{ marginTop: '10px', marginBottom: '10px' }}

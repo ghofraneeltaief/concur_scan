@@ -18,7 +18,7 @@ const style = {
   p: 4,
 };
 
-function Keywords() {
+function Angles() {
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [value, setValue] = useState('1');
   const [verticals, setVerticals] = useState([]);
@@ -176,7 +176,7 @@ function Keywords() {
     { field: 'id', headerName: 'ID', width: 220 },
     {
       field: 'Keywords',
-      headerName: 'Keywords',
+      headerName: 'Angles',
       width: 220,
       editable: true,
     },
@@ -213,7 +213,7 @@ function Keywords() {
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
         <Box gridColumn="span 7">
-          <DashboardCard title="Gestion Keywords">
+          <DashboardCard title="Gestion Angles">
             <Box mb={2} display={'flex'} justifyContent="end">
               <Button variant="contained" onClick={() => setOpen(true)}>
                 <FaPlus />
@@ -228,7 +228,7 @@ function Keywords() {
             >
               <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2" mb={5}>
-                  Ajouter Keywords
+                  Ajouter Angles
                 </Typography>
                 <TextField
                   id="outlined-basic"
@@ -268,7 +268,7 @@ function Keywords() {
           </DashboardCard>
         </Box>
         <Box gridColumn="span 5">
-          <DashboardCard title="Assign Keywords to Vertical">
+          <DashboardCard title="Ajouter Angles à Verticale">
             <Box mb={2} sx={{ width: '300px' }}>
               <Select
                 defaultValue={selectedOptions}
@@ -294,4 +294,4 @@ function Keywords() {
   );
 }
 
-export default Keywords;
+export default Angles;

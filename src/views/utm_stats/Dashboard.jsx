@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import Component from './Component';
 import Classement from './component/Classement';
 import Charts from './component/Charts';
@@ -34,6 +34,30 @@ function Dashboard() {
   const selectedPlatforms = platforms.filter((platform) =>
     selectedOptions ? selectedOptions.some((option) => option.value === platform.value) : true,
   );
+  /* Begin: VerticalId */
+  const [selectedVerticalId, setSelectedVerticalId] = useState(''); // Initialiser l'état avec l'ID vertical de l'URL
+  const handleVerticalSelect = (verticalId) => {
+    setSelectedVerticalId(verticalId); // Mettre à jour l'ID vertical lorsque sélectionné dans Selection
+  };
+  /* End: VerticalId */
+  /* Begin: Date From */
+  const [selectedDateFrom, setSelectedDateFrom] = useState(null);
+  const handleDateFromSelect = (dateFrom) => {
+    setSelectedDateFrom(dateFrom);
+  };
+  /* End: Date From */
+  /* Begin: Date To */
+  const [selectedDateTo, setSelectedDateTo] = useState(null);
+  const handleDateToSelect = (dateTo) => {
+    setSelectedDateTo(dateTo);
+  };
+  /* End: Date To */
+   /* Begin: Date To */
+   const [selectedPage, setSelectedPage] = useState(null);
+   const handlePageSelect = (Page) => {
+     setSelectedPage(Page);
+   };
+   /* End: Date To */
   return (
     <Box sx={{ width: 1 }}>
       <TabContext value={value}>
@@ -70,20 +94,28 @@ function Dashboard() {
       <DashboardCard>
         <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
           <Box gridColumn="span 12">
-            <Component />
+            <Component  onVerticalSelect={handleVerticalSelect}
+            onDateFromSelect={handleDateFromSelect}
+            onDateToSelect={handleDateToSelect} />
           </Box>
           <Box gridColumn="span 12">
             <Box gridColumn="span 12">
-              <Classement />
+              <Classement onSelectedPage={handlePageSelect}/>
             </Box>
             <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-              <Charts />
+              <Charts selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage}/>
             </Box>
             <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
               <Crea />
             </Box>
             <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-              <Information />
+              <Information selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage}/>
             </Box>
           </Box>
         </Box>

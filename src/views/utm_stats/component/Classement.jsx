@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 import { Visibility } from '@mui/icons-material';
 import axios from 'axios';
 
-function Classement() {
+function Classement({onSelectedPage}) {
   const [concurrentList, setConcurrentList] = useState([]);
   const [pageList, setPageList] = useState([]);
   const [selectedConcurrent, setSelectedConcurrent] = useState(null);
@@ -74,6 +74,7 @@ function Classement() {
   };
   const handlePageClick = (page) => {
     setSelectedPage(page);
+    onSelectedPage(page.page_id);
   };
   const countPagesByCompetitor = () => {
     const pageCounts = {};
@@ -91,7 +92,7 @@ function Classement() {
   const filteredPageList = selectedConcurrent
     ? pageList.filter((page) => page.fk_competitor_id === selectedConcurrent.competitor_id)
     : pageList;
-
+  
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
@@ -110,26 +111,31 @@ function Classement() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow
-                    onClick={() => handleConcurrentClick(1)}
-                    sx={{
-                      cursor: 'pointer',
-                      backgroundColor: '#E0F7FA',
-                      '&:hover': { backgroundColor: '#F1F1F1' },
-                    }}
-                  >
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton sx={{ padding: '4px', marginRight: '8px' }}>
-                          <Visibility sx={{ fontSize: '16px', color: '#0095E8' }} />
-                        </IconButton>
-                        <Typography color={'#0095E8'}>5</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>1</TableCell>
-                  </TableRow>
-                </TableBody>
+            {concurrentList.map((row, index) => (
+                <TableRow
+                  key={index}
+                  onClick={() => handleConcurrentClick(row)}
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: selectedConcurrent?.competitor_id === row.competitor_id ? '#E0F7FA' : 'inherit',
+                    '&:hover': { backgroundColor: '#F1F1F1' },
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <IconButton sx={{ padding: '4px', marginRight: '8px' }}>
+                        <Visibility sx={{ fontSize: '16px', color: '#0095E8' }} />
+                      </IconButton>
+                      <Typography color={selectedConcurrent?.competitor_id === row.competitor_id ? '#0095E8' : 'inherit'}>
+                        {row.competitor_name}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>{pagesByCompetitor[row.competitor_id] || 0}</TableCell>
+                  <TableCell>{row.couver}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
               </Table>
             </TableContainer>
           </DashboardCard>
@@ -149,26 +155,31 @@ function Classement() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow
-                    onClick={() => handlePageClick(1)}
-                    sx={{
-                      cursor: 'pointer',
-                      backgroundColor: '#E0F7FA',
-                      '&:hover': { backgroundColor: '#F1F1F1' },
-                    }}
-                  >
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton sx={{ padding: '4px', marginRight: '8px' }}>
-                          <Visibility sx={{ fontSize: '16px', color: '#0095E8' }} />
-                        </IconButton>
-                        <Typography color={'#0095E8'}>5</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>2</TableCell>
-                    <TableCell>3</TableCell>
-                  </TableRow>
-                </TableBody>
+            {filteredPageList.map((row, index) => (
+                <TableRow
+                  key={index}
+                  onClick={() => handlePageClick(row)}
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: selectedPage?.page_id === row.page_id ? '#E0F7FA' : 'inherit',
+                    '&:hover': { backgroundColor: '#F1F1F1' },
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <IconButton sx={{ padding: '4px', marginRight: '8px' }}>
+                        <Visibility sx={{ fontSize: '16px', color: '#0095E8' }} />
+                      </IconButton>
+                      <Typography color={selectedPage?.page_id === row.page_id ? '#0095E8' : 'inherit'}>
+                        {row.page_name}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>{row.nbr_ads}</TableCell>
+                  <TableCell>{row.couver}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
               </Table>
             </TableContainer>
           </DashboardCard>

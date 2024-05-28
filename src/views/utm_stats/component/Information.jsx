@@ -8,7 +8,9 @@ import Cible from './charts/Cible';
 import Repartition from './charts/Repartition'; 
 import Periode from './charts/Periode'; 
 
-function Charts() {
+function Information({ selectedVerticalId,
+  selectedDateFrom,
+  selectedDateTo,selectedPage}) {
   return (
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Information Créa" subtitle="Créa 1">
@@ -63,7 +65,10 @@ function Charts() {
             <DashboardCard
               title="Répartition Géolocalisation"
             >
-              <Repartition/>
+              <Repartition selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage}/>
             </DashboardCard>
           </Box>
           <Box gridColumn="span 4">
@@ -79,4 +84,4 @@ function Charts() {
   );
 }
 
-export default Charts;
+export default Information;

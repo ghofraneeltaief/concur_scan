@@ -13,6 +13,7 @@ function Component({
   onDateToSelect,
   onRecalculateClick,
 }) {
+  const [selectedOptions, setSelectedOptions] = useState(null);
   async function getToken() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -21,26 +22,24 @@ function Component({
       throw new Error('No token available');
     }
   }
-
   const fetchVerticals = async () => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
-      const formdata = new FormData();
-      formdata.append('Hipto-Authorization', accessToken);
       const requestOptions = {
-        method: 'POST',
-        body: formdata,
+        method: 'GET',
       };
-      const response = await fetch(`${BASE_URL}/${api_version}/verticals`, requestOptions);
+      const response = await fetch(
+        `${BASE_URL}/${api_version}/verticals?hp_cs_authorization=${accessToken}`,
+        requestOptions,
+      );
       const data = await response.json();
       setVerticals(data);
     } catch (error) {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchVerticals();
   }, []);
@@ -110,22 +109,21 @@ function Component({
             Verticales
           </Typography>
           <Select
-            isMulti
-            options={verticals.map((option) => ({
-              value: option.vertical_id,
-              label: option.vertical_code,
-            }))}
-            value={selectedVertical}
-            onChange={handleVerticalSelect}
-            name="Verticale"
-            placeholder="Verticales"
-            isSearchable={true}
-            MenuProps={MenuProps}
-            className="basic-single"
-            classNamePrefix="select"
-            menuPortalTarget={document.body}
-            menuPosition={'fixed'}
-          />
+                defaultValue={selectedOptions}
+                onChange={handleVerticalSelect}
+                options={verticals.map((vertical) => ({
+                  value: vertical.vertical_id,
+                  label: vertical.codified_name,
+                }))}
+                isSearchable={true}
+                name="Verticale"
+                placeholder="Verticales"
+                MenuProps={MenuProps}
+                className="basic-single"
+                classNamePrefix="select"
+                menuPortalTarget={document.body}
+                menuPosition={'fixed'}
+              />
         </Grid>
         <Grid item xs={3.6}>
           <Typography variant="h6" sx={{ fontWeight: '400' }}>

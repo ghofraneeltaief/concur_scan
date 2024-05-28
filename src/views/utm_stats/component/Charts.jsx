@@ -6,7 +6,9 @@ import Placement from './charts/Placement';
 import Cible from './charts/Cible'; 
 import Tendance from './charts/Tendance'; 
 
-function Charts() {
+function Charts({ selectedVerticalId,
+  selectedDateFrom,
+  selectedDateTo,selectedPage}) {
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
@@ -17,12 +19,18 @@ function Charts() {
         </Box>
         <Box gridColumn="span 4">
           <DashboardCard title="Répartition média" subtitle="Page 1">
-                <Media />
+                <Media selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage} />
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
           <DashboardCard title="Cible" subtitle="Page 1">
-            <Cible />
+            <Cible selectedVerticalId={selectedVerticalId}
+            selectedDateFrom={selectedDateFrom}
+            selectedDateTo={selectedDateTo}
+            selectedPage={selectedPage}/>
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">

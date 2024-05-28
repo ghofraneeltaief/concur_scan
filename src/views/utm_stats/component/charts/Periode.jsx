@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import './react-datepicker.css';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Grid, Typography } from '@mui/material';

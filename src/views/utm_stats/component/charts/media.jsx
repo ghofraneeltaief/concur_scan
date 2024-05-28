@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
+import axios from 'axios';
+import { BASE_URL, api_version } from '../../../authentication/config'; 
 
 class Media extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      series: [44, 55, 41], // Adjust series to match the example
+      series: [],
       options: {
         chart: {
           type: 'donut',
@@ -29,10 +31,10 @@ class Media extends React.Component {
         legend: {
           position: 'bottom',
           horizontalAlign: 'center',
-          show: true, 
+          show: true,
         },
-        labels: ['Image', 'Vidéo', 'Caroussel'], // Add labels
-        colors: ['#f1c40f', '#2ecc71', '#6577F3'], // Add custom colors
+        labels: [],
+        colors: ['#f1c40f', '#2ecc71', '#6577F3'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -46,6 +48,51 @@ class Media extends React.Component {
         }]
       },
     };
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+  
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedVerticalId !== this.props.selectedVerticalId ||
+      prevProps.selectedDateFrom !== this.props.selectedDateFrom ||
+      prevProps.selectedDateTo !== this.props.selectedDateTo ||
+      prevProps.selectedPage !== this.props.selectedPage
+    ) {
+      this.fetchData();
+    }
+  }
+
+  async fetchData() {
+    const { selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage } = this.props;
+
+    if (selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage) {
+      const token = localStorage.getItem('token');
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+      const apiUrl = `${BASE_URL}/${api_version}/reports/ads_stats_by_medias_type?hp_cs_authorization=${accessToken}&date_begin=${selectedDateFrom}&date_end=${selectedDateTo}&vertical_id=${selectedVerticalId}&page_id=${selectedPage}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+        const data = response.data;
+
+        // Extract labels and series from API response
+        const labels = Object.keys(data);
+        const series = Object.values(data);
+
+        this.setState({
+          series: series,
+          options: {
+            ...this.state.options,
+            labels: labels,
+          }
+        });
+      } catch (error) {
+        console.error("There was an error fetching the data!", error);
+      }
+    }
   }
 
   render() {

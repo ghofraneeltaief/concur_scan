@@ -91,7 +91,7 @@ function Information({
                   NB couverture : <Typography variant="subtitle1" component="span"></Typography>
                 </Typography>
                 <Typography variant="h7" component="div">
-                  Page de redirection : 
+                  Page de redirection :  
                 </Typography> <Typography variant="subtitle1" component="span"><a href={adDetail.url}>{adDetail.url}</a></Typography>
               </DashboardCard>
             )}

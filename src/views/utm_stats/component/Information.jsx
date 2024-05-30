@@ -4,81 +4,126 @@ import Button from '@mui/material/Button';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import { BASE_URL, api_version } from '../../authentication/config';
 import Swal from 'sweetalert2';
-import Cible from './charts/Cible'; 
-import Repartition from './charts/Repartition'; 
-import Periode from './charts/Periode'; 
+import Cible_byAd from './charts/Cible_byAd';
+import Repartition from './charts/Repartition';
+import Periode from './charts/Periode';
 
-function Information({ selectedVerticalId,
+function Information({
+  selectedVerticalId,
   selectedDateFrom,
-  selectedDateTo,selectedPage}) {
+  selectedDateTo,
+  selectedPage,
+  selectedDetail,
+}) {
+  const [ADS, setADS] = useState([]);
+  const [adDetail, setAdDetail] = useState(null);
+
+  async function getToken() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      return token;
+    } else {
+      throw new Error('No token available');
+    }
+  }
+
+  useEffect(() => {
+    if (
+      selectedVerticalId &&
+      selectedDateFrom &&
+      selectedDateTo &&
+      selectedPage &&
+      selectedDetail
+    ) {
+      const fetchADS = async () => {
+        try {
+          const token = await getToken();
+          const responseObject = JSON.parse(token);
+          const accessToken = responseObject.access_token;
+          const requestOptions = {
+            method: 'GET',
+          };
+          const response = await fetch(
+            `${BASE_URL}/${api_version}/reports/global_ads_stats?hp_cs_authorization=${accessToken}&date_begin=${selectedDateFrom}&date_end=${selectedDateTo}&vertical_id=${selectedVerticalId}&page_id=${selectedPage}`,
+            requestOptions,
+          );
+          const data = await response.json();
+
+          setADS(data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      fetchADS();
+    }
+  }, [selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage, selectedDetail]);
+
+  useEffect(() => {
+    if (ADS.length > 0 && selectedDetail) {
+      const ad = ADS.find((ad) => ad.ad_id === selectedDetail);
+      setAdDetail(ad);
+    }
+  }, [ADS, selectedDetail]);
+
+  console.log('test', adDetail);
   return (
     <Box sx={{ width: 1 }}>
-      <DashboardCard title="Information Créa" subtitle="Créa 1">
+      <DashboardCard title="Information Créa">
         <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
           <Box gridColumn="span 8">
-            <DashboardCard>
-              <Typography variant="h7">
-                ID : <Typography variant="subtitle1">1091559795400255</Typography>
-              </Typography>
-              <Typography variant="h7">
-                Statut : <Typography variant="subtitle1">Actif</Typography>
-              </Typography>
-              <Typography variant="h7">
-                1ère diffusion : <Typography variant="subtitle1"> 08/04/2024</Typography>
-              </Typography>
-              <Typography variant="h7">
-                Placement : <Typography variant="subtitle1">ID :</Typography>
-              </Typography>
-              <Typography variant="h7">
-                NB couverture : <Typography variant="subtitle1">200</Typography>
-              </Typography>
-              <Typography variant="h7">
-                Page de redirection :{' '}
-                <Typography variant="subtitle1">https://clubfibre.com/Promo_Box_Fibre/</Typography>
-              </Typography>
+          {adDetail && (
+              <DashboardCard>
+                <Typography variant="h7">
+                  ID : <Typography variant="subtitle1">{adDetail.ad_external_id}</Typography>
+                </Typography>
+                <Typography variant="h7">
+                  Statut : <Typography variant="subtitle1"></Typography>
+                </Typography>
+                <Typography variant="h7">
+                  1ère diffusion :{' '}
+                  <Typography variant="subtitle1">{adDetail.ad_creation_time}</Typography>
+                </Typography>
+                <Typography variant="h7">
+                  Placement : <Typography variant="subtitle1"></Typography>
+                </Typography>
+                <Typography variant="h7">
+                  NB couverture : <Typography variant="subtitle1"></Typography>
+                </Typography>
+                <Typography variant="h7">
+                  Page de redirection : 
+                </Typography><a href={adDetail.url}>{adDetail.url}</a>
+              </DashboardCard>
+            )}
+          </Box>
+          <Box gridColumn="span 8">
+            <DashboardCard title="Période activation">
+              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom}/>
             </DashboardCard>
           </Box>
           <Box gridColumn="span 8">
-            <DashboardCard
-              title="Période activation"
-            >
-              <Periode/>
-            </DashboardCard>
+          {adDetail && (
+              <DashboardCard title={adDetail.ad_creative_link_titles}>
+                <Typography>{adDetail.ad_creative_bodies}</Typography>
+              </DashboardCard>
+            )}
           </Box>
-          <Box gridColumn="span 8">
-            <DashboardCard
-              title="Radiateur Éco Hiver // Voir le prix"
-              subtitle="Fabriqués en France"
-            >
-              <Typography>
-              Découvrez les nouveaux radiateurs hiver 2024 !Ces nouveaux radiateurs diffusent la
-                chaleur de manière efficace, vous permettant de profiter d’un chauffage prolongé
-                sans pour autant augmenter vos factures.Vous pouvez réaliser jusqu’à 45% d’économies
-                sur vos factures par rapport à des radiateurs anciens. Ils existent en 2 coloris,
-                noir mat et blanc nacré et sont 100% fabriqués en France !Cliquez dès maintenant
-                pour voir le prix des radiateurs{' '}
-              </Typography>
-              <img></img>
+
+          <Box gridColumn="span 4">
+            <DashboardCard title="Répartition Géolocalisation">
+              <Repartition
+                selectedVerticalId={selectedVerticalId}
+                selectedDateFrom={selectedDateFrom}
+                selectedDateTo={selectedDateTo}
+                selectedPage={selectedPage}
+              />
             </DashboardCard>
           </Box>
           <Box gridColumn="span 4">
-            <DashboardCard
-              title="Répartition Géolocalisation"
-            >
-              <Repartition selectedVerticalId={selectedVerticalId}
-            selectedDateFrom={selectedDateFrom}
-            selectedDateTo={selectedDateTo}
-            selectedPage={selectedPage}/>
-            </DashboardCard>
-          </Box>
-          <Box gridColumn="span 4">
-            <DashboardCard
-              title="Cible"
-            >
-              <Cible selectedVerticalId={selectedVerticalId}
-            selectedDateFrom={selectedDateFrom}
-            selectedDateTo={selectedDateTo}
-            selectedPage={selectedPage}/>
+            <DashboardCard title="Cible">
+              <Cible_byAd
+                selectedDetail={selectedDetail}
+              />
             </DashboardCard>
           </Box>
         </Box>

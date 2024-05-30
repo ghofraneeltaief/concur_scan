@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import { BASE_URL, api_version } from '../../../authentication/config';
 
-class Cible extends React.Component {
+class Cible_byAd extends React.Component {
   constructor(props) {
     super(props);
 
@@ -17,7 +16,7 @@ class Cible extends React.Component {
           stacked: true,
           stackType: '100%'
         },
-        colors: ['#58A9FB', '#ED4B82'],
+        colors: ['#58A9FB', '#ED4B82', '#8a8a8a'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -41,9 +40,6 @@ class Cible extends React.Component {
         }
       },
     };
-
-    // Bind the context of handleError to the component
-    this.handleError = this.handleError.bind(this);
   }
 
   componentDidMount() {
@@ -52,51 +48,36 @@ class Cible extends React.Component {
   
   componentDidUpdate(prevProps) {
     if (
-      prevProps.selectedVerticalId !== this.props.selectedVerticalId ||
-      prevProps.selectedDateFrom !== this.props.selectedDateFrom ||
-      prevProps.selectedDateTo !== this.props.selectedDateTo ||
-      prevProps.selectedPage !== this.props.selectedPage
+      prevProps.selectedDetail !== this.props.selectedDetail
     ) {
       this.fetchData();
     }
   }
 
-  handleError(error) {
-    Swal.fire({
-      icon: 'error',
-      text: error,
-      width: '30%',
-      confirmButtonText: "Ok, j'ai compris!",
-      confirmButtonColor: '#0095E8',
-    });
-  }
-
   async fetchData() {
-    const { selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage } = this.props;
+    const { selectedDetail } = this.props;
 
-    if (selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage) {
+    if ( selectedDetail) {
       const token = localStorage.getItem('token');
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
-      const apiUrl = `${BASE_URL}/${api_version}/reports/ads_stats_by_ranges_gender?hp_cs_authorization=${accessToken}&date_begin=${selectedDateFrom}&date_end=${selectedDateTo}&vertical_id=${selectedVerticalId}&page_id=${selectedPage}`;
+      const apiUrl = `${BASE_URL}/${api_version}/reports/ad_by_ranges?hp_cs_authorization=${accessToken}&ad_id=${selectedDetail}`;
 
       try {
         const response = await axios.get(apiUrl);
         const data = response.data;
-        
-        if (response.status === 404) {
-          this.handleError('Aucune Cible fondée !');
-          return;
-        }
 
-        if (response.status !== 200) {
-          throw new Error('Network response was not ok');
-        }
+        // Assuming data is an array of objects as given:
+        // [
+        //   { "male": "44879", "female": "29879", "unknown": "1156", "fk_fb_ad_range_id": "1", "fb_ad_range_label": "18-24" },
+        //   ...
+        // ]
         
         // Process the response data to fit the chart series
         const categories = [];
         const maleSeries = [];
         const femaleSeries = [];
+        const unknownSeries = [];
 
         data.forEach(item => {
           categories.push(item.fb_ad_range_label);
@@ -119,7 +100,6 @@ class Cible extends React.Component {
         });
       } catch (error) {
         console.error("There was an error fetching the data!", error);
-        this.handleError('Aucune Cible fondée !');
       }
     }
   }
@@ -133,4 +113,4 @@ class Cible extends React.Component {
   }
 }
 
-export default Cible;
+export default Cible_byAd;

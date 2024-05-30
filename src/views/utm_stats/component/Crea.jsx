@@ -7,9 +7,9 @@ import Swal from 'sweetalert2';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage }) {
+function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage, onDetail }) {
   const [ADS, setADS] = useState([]);
-
+  const [error, setError] = useState(null);
   async function getToken() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -33,6 +33,12 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
             `${BASE_URL}/${api_version}/reports/global_ads_stats?hp_cs_authorization=${accessToken}&date_begin=${selectedDateFrom}&date_end=${selectedDateTo}&vertical_id=${selectedVerticalId}&page_id=${selectedPage}`,
             requestOptions,
           );
+          if (!response.ok) {
+            if (response.status === 404) {
+              handleError('Aucune ADS fondée !');
+            }
+            throw new Error('Network response was not ok');
+          }
           const data = await response.json();
           setADS(data);
         } catch (error) {
@@ -69,7 +75,20 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
   };
 
   const ADSChunks = chunkArray(ADS, 4);
+  const handleViewDetail = (id) => {
+    onDetail(id);
+  };
 
+  const handleError = (error) => {
+    Swal.fire({
+      icon: 'error',
+      text: error,
+      width: '30%',
+      confirmButtonText: "Ok, j'ai compris!",
+      confirmButtonColor: '#0095E8',
+    });
+    setError(error);
+  };
   return (
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Classement Créa">
@@ -81,7 +100,7 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
                   <DashboardCard title={row.page_name} >
                     <Typography>{truncateText(row.ad_creative_bodies, 20, 100)}</Typography> {/* 20 words or 100 characters limit */}
                     <Box mt={2}>
-                      <Button variant="contained">Voir détail</Button>
+                      <Button variant="contained" onClick={() => handleViewDetail(row.ad_id)}>Voir détail</Button>
                     </Box>
                   </DashboardCard>
                 </Box>

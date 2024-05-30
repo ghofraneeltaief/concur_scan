@@ -1,60 +1,92 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
-import styled from 'styled-components';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 
-const data = [
-  { name: 'Auto', value: 100, fill: '#4caf50' },
-  { name: 'Manuel', value: 50, fill: '#7986cb' },
-  { name: 'Instagram', value: 20, fill: '#90caf9' },
-  { name: 'Facebook', value: 15, fill: '#2196f3' },
-  { name: 'Autres', value: 5, fill: '#0d47a1' },
-];
+Chart.register(ArcElement, Tooltip, Legend, Title);
 
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${data[index].name}`}
-    </text>
-  );
+const Placement = () => {
+  const data = {
+    "auto": {
+        "count": 1043,
+        "details": []
+    },
+    "manual": {
+        "count": 768,
+        "details": [
+            {
+                "count": "733",
+                "publisher_plateforme_label": "facebook"
+            },
+            {
+                "count": "736",
+                "publisher_plateforme_label": "instagram"
+            },
+            {
+                "count": "733",
+                "publisher_plateforme_label": "audience_network"
+            }
+        ]
+    }
 };
+    const { auto, manual } = data;
+    const autoCount = auto.count;
+    const manualCount = manual.count;
+    const manualDetailsCounts = manual.details.map(detail => parseInt(detail.count));
 
-const Container = styled.div`
-  width: 100%;
-  text-align: center;
-  font-family: Arial, sans-serif;
-`;
+    const chartData = {
+        labels: ['Auto', 'Instagram', 'Facebook', 'Messenger', 'Autres'],
+        datasets: [{
+            data: [
+                autoCount,
+                manualDetailsCounts[1], // Instagram
+                manualDetailsCounts[0], // Facebook
+                manualDetailsCounts[2], // Messenger
+                manualCount - manualDetailsCounts.reduce((a, b) => a + b, 0) // Autres
+            ],
+            backgroundColor: [
+                '#6DD5B3', // Auto
+                '#9D81E2', // Instagram
+                '#55A9FF', // Facebook
+                '#3282CD', // Messenger
+                '#205F9E'  // Autres
+            ],
+            hoverBackgroundColor: [
+                '#57C99D', // Auto
+                '#8362E3', // Instagram
+                '#3B94E8', // Facebook
+                '#2768AB', // Messenger
+                '#164883'  // Autres
+            ]
+        }]
+    };
 
-const SemiDonutChart = () => {
-  return (
-    <Container>
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-          <Pie
-            data={data}
-            startAngle={180}
-            endAngle={0}
-            innerRadius="50%"
-            outerRadius="80%"
-            fill="#8884d8"
-            paddingAngle={3}
-            dataKey="value"
-            labelLine={false}
-            label={renderCustomizedLabel}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
-            ))}
-          </Pie>
-          <Legend layout="horizontal" verticalAlign="bottom" align="center" />
-        </PieChart>
-      </ResponsiveContainer>
-    </Container>
-  );
-};
+    const options = {
+        responsive: true,
+        cutout: '50%',
+        rotation: -90,
+        circumference: 180,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    usePointStyle: true,
+                },
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                    }
+                }
+            }
+        }
+    };
 
-export default SemiDonutChart;
+    return (
+        <div>
+            <Doughnut data={chartData} options={options} />
+        </div>
+    );
+}
+
+export default Placement;

@@ -296,7 +296,7 @@ const Concurrent = () => {
                 label="Country ID"
                 fullWidth
                 value={selectedRowData.fk_country_id}
-                onChange={handleEditInputChange}
+                disabled
                 sx={{ marginTop: '10px', marginBottom: '10px' }}
               />
             </Box>

@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, Modal, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Modal,
+  TextField,
+  IconButton,
+  Paper,
+  Container,
+} from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
-import { BASE_URL, api_version } from '../authentication/config'; // Importer les constantes
-import DashboardCard from 'src/components/shared/DashboardCard'; // Assurez-vous que le chemin est correct
+import { BASE_URL, api_version } from '../authentication/config';
+import DashboardCard from 'src/components/shared/DashboardCard';
 import { FaPlus } from 'react-icons/fa';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const style = {
   position: 'absolute',
@@ -20,7 +31,6 @@ const style = {
 
 function Angles() {
   const [selectedOptions, setSelectedOptions] = useState(null);
-  const [value, setValue] = useState('1');
   const [verticals, setVerticals] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const [open, setOpen] = useState(false);
@@ -37,17 +47,14 @@ function Angles() {
       throw new Error('No token available');
     }
   }
+
   const fetchVerticals = async () => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
-      const requestOptions = {
-        method: 'GET',
-      };
       const response = await fetch(
         `${BASE_URL}/${api_version}/verticals?hp_cs_authorization=${accessToken}`,
-        requestOptions,
       );
       const data = await response.json();
       setVerticals(data);
@@ -55,26 +62,47 @@ function Angles() {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchVerticals();
-  }, []);
 
-  useEffect(() => {
-    const fetchAllKeywords = async () => {
+  const fetchAllKeywords = async () => {
+    try {
+      const token = await getToken();
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+      const response = await fetch(
+        `${BASE_URL}/${api_version}/keywords?hp_cs_authorization=${accessToken}`,
+      );
+      const data = await response.json();
+      setKeywords(data);
+    } catch (error) {
+      console.error('Error fetching keywords:', error);
+      if (error.message === 'Unauthorized') {
+        Swal.fire({
+          icon: 'error',
+          text: 'Your session has expired. Please log in again.',
+        }).then(() => {
+          // Redirect to login or clear token
+        });
+      }
+    }
+  };
+
+  const fetchAssignedKeywords = async () => {
+    if (selectedVertical) {
       try {
         const token = await getToken();
         const responseObject = JSON.parse(token);
         const accessToken = responseObject.access_token;
         const response = await fetch(
-          `${BASE_URL}/${api_version}/keywords?hp_cs_authorization=${accessToken}`,
+          `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
         );
-        if (response.status === 401) {
-          throw new Error('Unauthorized');
-        }
         const data = await response.json();
-        setKeywords(data);
+        if (Array.isArray(data) && data.length > 0) {
+          setAssignedKeywords(data);
+        } else {
+          setAssignedKeywords([]);
+        }
       } catch (error) {
-        console.error('Error fetching keywords:', error);
+        console.error('Error fetching assigned keywords:', error);
         if (error.message === 'Unauthorized') {
           Swal.fire({
             icon: 'error',
@@ -84,54 +112,89 @@ function Angles() {
           });
         }
       }
-    };
+    } else {
+      setAssignedKeywords([]);
+    }
+  };
 
+  useEffect(() => {
+    fetchVerticals();
     fetchAllKeywords();
   }, []);
 
   useEffect(() => {
-    if (selectedVertical) {
-      const fetchAssignedKeywords = async () => {
-        try {
-          const token = await getToken();
-          const responseObject = JSON.parse(token);
-          const accessToken = responseObject.access_token;
-          const response = await fetch(
-            `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
-          );
-          if (response.status === 401) {
-            throw new Error('Unauthorized');
-          }
-          const data = await response.json();
-          setAssignedKeywords(data.length > 0 ? data : []);
-        } catch (error) {
-          console.error('Error fetching assigned keywords:', error);
-          if (error.message === 'Unauthorized') {
-            Swal.fire({
-              icon: 'error',
-              text: 'Your session has expired. Please log in again.',
-            }).then(() => {
-              // Redirect to login or clear token
-            });
-          }
-        }
-      };
-
-      fetchAssignedKeywords();
-    } else {
-      setAssignedKeywords([]);
-    }
+    fetchAssignedKeywords();
   }, [selectedVertical]);
 
-  const toggleKeyword = (keyword) => {
-    if (selectedKeywords.includes(keyword)) {
-      setSelectedKeywords(selectedKeywords.filter((kw) => kw !== keyword));
-    } else {
-      setSelectedKeywords([...selectedKeywords, keyword]);
+  const handleAddKeywordToVertical = async (keyword) => {
+    try {
+      const token = await getToken();
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+      const response = await fetch(
+        `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ keyword_id: keyword.keyword_id }),
+        },
+      );
+
+      if (response.ok) {
+        setAssignedKeywords((prevKeywords) => [...prevKeywords, keyword]);
+        Swal.fire({
+          icon: 'success',
+          text: `Angel "${keyword.keyword_label}" ajouté avec success!`,
+        });
+      } else {
+        throw new Error('Failed to add keyword to vertical');
+      }
+    } catch (error) {
+      console.error('Error adding keyword to vertical:', error);
+      Swal.fire({
+        icon: 'error',
+        text: `Error adding keyword: ${error.message}`,
+      });
     }
   };
 
-  const handleAddKeyword = async () => {
+  const handleRemoveKeywordFromVertical = async (keyword) => {
+    try {
+      const token = await getToken();
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+      const response = await fetch(
+        `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ keyword_id: keyword.keyword_id }),
+        },
+      );
+
+      if (response.ok) {
+        setAssignedKeywords(assignedKeywords.filter((kw) => kw.keyword_id !== keyword.keyword_id));
+        Swal.fire({
+          icon: 'success',
+          text: `Angel "${keyword.keyword_label}" supprimé avec success`,
+        });
+      } else {
+        throw new Error('Failed to remove keyword from vertical');
+      }
+    } catch (error) {
+      console.error('Error removing keyword from vertical:', error);
+      Swal.fire({
+        icon: 'error',
+        text: `Error removing keyword: ${error.message}`,
+      });
+    }
+  };
+
+  const handleAddNewKeyword = async () => {
     if (newKeyword.trim()) {
       try {
         const token = await getToken();
@@ -181,14 +244,13 @@ function Angles() {
       editable: true,
     },
     {
-      field: 'Action',
-      headerName: 'Action',
-      width: 220,
-      editable: true,
+      field: 'Add',
+      headerName: 'Add',
+      width: 100,
       renderCell: (params) => (
-        <Button variant="contained" color="primary" onClick={() => toggleKeyword(params.row)}>
-          {selectedKeywords.includes(params.row) ? 'Remove' : 'Add'}
-        </Button>
+        <IconButton color="primary" onClick={() => handleAddKeywordToVertical(params.row)}>
+          <AddIcon />
+        </IconButton>
       ),
     },
   ];
@@ -196,7 +258,8 @@ function Angles() {
   const rows = keywords.map((keyword, index) => ({
     id: keyword.keyword_id || index.toString(),
     Keywords: keyword.keyword_label,
-    Action: 'N/A',
+    keyword_id: keyword.keyword_id, // Including keyword_id for easy access
+    keyword_label: keyword.keyword_label,
   }));
 
   const ITEM_HEIGHT = 30;
@@ -209,6 +272,7 @@ function Angles() {
       },
     },
   };
+
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
@@ -247,46 +311,81 @@ function Angles() {
                   >
                     <Typography>Annuler</Typography>
                   </Button>
-                  <Button variant="contained" onClick={handleAddKeyword}>
+                  <Button variant="contained" onClick={handleAddNewKeyword}>
                     <Typography>Ajouter</Typography>
                   </Button>
                 </Box>
               </Box>
             </Modal>
-            <Box sx={{ height: 700, width: '100%' }}>
+            <Box sx={{ height: 400, width: '100%' }}>
               <DataGrid
                 slots={{
                   toolbar: GridToolbar,
                 }}
                 rows={rows}
                 columns={columns}
-                components={{
-                  Toolbar: () => null,
-                }}
+                pageSize={5}
+                rowsPerPageOptions={[5, 10, 20]}
+                components={{ Toolbar: GridToolbar }}
               />
             </Box>
           </DashboardCard>
         </Box>
         <Box gridColumn="span 5">
-          <DashboardCard title="Ajouter Angles à Verticale">
-            <Box mb={2} sx={{ width: '300px' }}>
-              <Select
-                defaultValue={selectedOptions}
-                onChange={(option) => setSelectedVertical(option.value)}
-                options={verticals.map((vertical) => ({
-                  value: vertical.id,
-                  label: vertical.codified_name,
-                }))}
-                isSearchable={true}
-                name="Verticale"
-                placeholder="Verticales"
-                MenuProps={MenuProps}
-                className="basic-single"
-                classNamePrefix="select"
-                menuPortalTarget={document.body}
-                menuPosition={'fixed'}
-              />
-            </Box>
+          <DashboardCard title="Verticals">
+            <Select
+              defaultValue={selectedOptions}
+              onChange={(option) => {
+                setSelectedVertical(option.value);
+                setSelectedOptions(option); // Ensure selectedOptions is updated
+              }}
+              options={verticals.map((vertical) => ({
+                value: vertical.vertical_id,
+                label: vertical.codified_name,
+              }))}
+              isSearchable={true}
+              name="Verticale"
+              placeholder="Verticales"
+              MenuProps={MenuProps}
+              className="basic-single"
+              classNamePrefix="select"
+              menuPortalTarget={document.body}
+              menuPosition={'fixed'}
+            />
+            {selectedVertical && (
+              <Box mt={2}>
+                <Typography variant="h6">Angle attribués pour {selectedOptions?.label}</Typography>
+                <Container>
+                  {assignedKeywords.length > 0 ? (
+                    assignedKeywords
+                      .filter((keyword) => keyword.keyword_id && keyword.keyword_label) // Ensure no empty elements
+                      .map((keyword) => (
+                        <Paper
+                          key={keyword.keyword_id}
+                          elevation={1}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 1,
+                            marginBottom: 1,
+                          }}
+                        >
+                          <Typography>{keyword.keyword_label}</Typography>
+                          <IconButton
+                            color="secondary"
+                            onClick={() => handleRemoveKeywordFromVertical(keyword)}
+                          >
+                            <DeleteIcon color='error'/>
+                          </IconButton>
+                        </Paper>
+                      ))
+                  ) : (
+                    <Typography>Aucun Angle attribué à ce verticale.</Typography>
+                  )}
+                </Container>
+              </Box>
+            )}
           </DashboardCard>
         </Box>
       </Box>

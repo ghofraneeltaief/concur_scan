@@ -52,12 +52,18 @@ function Dashboard() {
     setSelectedDateTo(dateTo);
   };
   /* End: Date To */
-   /* Begin: Date To */
-   const [selectedPage, setSelectedPage] = useState(null);
-   const handlePageSelect = (Page) => {
-     setSelectedPage(Page);
-   };
-   /* End: Date To */
+  /* Begin: Page */
+  const [selectedPage, setSelectedPage] = useState(null);
+  const handlePageSelect = (Page) => {
+    setSelectedPage(Page);
+  };
+  /* End: Page */
+  /* Begin: Detail */
+  const [selectedDetail, setSelectedDetail] = useState(null);
+  const handleDetailSelect = (Detail) => {
+    setSelectedDetail(Detail);
+  };
+  /* End: Detail */
   return (
     <Box sx={{ width: 1 }}>
       <TabContext value={value}>
@@ -94,32 +100,54 @@ function Dashboard() {
       <DashboardCard>
         <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
           <Box gridColumn="span 12">
-            <Component  onVerticalSelect={handleVerticalSelect}
-            onDateFromSelect={handleDateFromSelect}
-            onDateToSelect={handleDateToSelect} />
+            <Component
+              onVerticalSelect={handleVerticalSelect}
+              onDateFromSelect={handleDateFromSelect}
+              onDateToSelect={handleDateToSelect}
+            />
           </Box>
           <Box gridColumn="span 12">
             <Box gridColumn="span 12">
-              <Classement onSelectedPage={handlePageSelect}/>
+              <Classement onSelectedPage={handlePageSelect} />
             </Box>
-            <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-              <Charts selectedVerticalId={selectedVerticalId}
-            selectedDateFrom={selectedDateFrom}
-            selectedDateTo={selectedDateTo}
-            selectedPage={selectedPage}/>
-            </Box>
-            <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-              <Crea selectedVerticalId={selectedVerticalId}
-            selectedDateFrom={selectedDateFrom}
-            selectedDateTo={selectedDateTo}
-            selectedPage={selectedPage}/>
-            </Box>
-            <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-              <Information selectedVerticalId={selectedVerticalId}
-            selectedDateFrom={selectedDateFrom}
-            selectedDateTo={selectedDateTo}
-            selectedPage={selectedPage}/>
-            </Box>
+            {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 ? (
+              <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
+                <Charts
+                  selectedVerticalId={selectedVerticalId}
+                  selectedDateFrom={selectedDateFrom}
+                  selectedDateTo={selectedDateTo}
+                  selectedPage={selectedPage}
+                />
+              </Box>
+            ) : (
+              <></>
+            )}
+            {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 ? (
+              <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
+                <Crea
+                  selectedVerticalId={selectedVerticalId}
+                  selectedDateFrom={selectedDateFrom}
+                  selectedDateTo={selectedDateTo}
+                  selectedPage={selectedPage}
+                  onDetail={handleDetailSelect}
+                />
+              </Box>
+            ) : (
+              <></>
+            )}
+            {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage && selectedDetail > 0 ? (
+              <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
+                <Information
+                selectedDetail={selectedDetail}
+                  selectedVerticalId={selectedVerticalId}
+                  selectedDateFrom={selectedDateFrom}
+                  selectedDateTo={selectedDateTo}
+                  selectedPage={selectedPage}
+                />
+              </Box>
+            ) : (
+              <></>
+            )}
           </Box>
         </Box>
       </DashboardCard>

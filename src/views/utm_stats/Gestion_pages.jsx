@@ -497,7 +497,7 @@ function Pages() {
               label="External Id"
               name="external_id"
               value={selectedRowData.external_id}
-            onChange={handleEditInputChange}
+            disabled
               variant="outlined"
               fullWidth
             />
@@ -508,7 +508,7 @@ function Pages() {
               <Select
               name="vertical"
               value={selectedRowData.vertical}
-              onChange={handleEditSelectChange}
+             disabled
               fullWidth
             >
               {verticals.map((vertical) => (
@@ -525,7 +525,7 @@ function Pages() {
               <Select
               name="competitor"
               value={selectedRowData.competitor}
-              onChange={handleEditSelectChange}
+              disabled
               fullWidth
             >
               {competitors.map((competitor) => (

@@ -1,75 +1,140 @@
-import React, { useState } from 'react';
-import './react-datepicker.css';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Grid, Typography } from '@mui/material';
+import React from 'react';
+import ReactApexChart from 'react-apexcharts';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { BASE_URL, api_version } from '../../../authentication/config';
 
-const ActivationPeriod = () => {
-  const [startDate, setStartDate] = useState(new Date());
+class Periode extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const data = [
-    { time: '07h', status: 'Inactive' },
-    { time: '08h', status: 'Active' },
-    { time: '09h', status: 'Active' },
-    { time: '10h', status: 'Inactive' },
-    { time: '11h', status: 'Inactive' },
-    { time: '12h', status: 'Inactive' },
-    { time: '13h', status: 'Active' },
-    { time: '14h', status: 'Inactive' },
-    { time: '15h', status: 'Active' },
-    { time: '16h', status: 'Inactive' },
-    { time: '17h', status: 'Active' },
-    { time: '18h', status: 'Inactive' },
-    { time: '19h', status: 'Active' },
-    { time: '20h', status: 'Inactive' },
-    { time: '21h', status: 'Inactive' },
-    { time: '22h', status: 'Inactive' },
-    { time: '23h', status: 'Inactive' },
-  ];
+    this.state = {
+      series: [],
+      options: {
+        chart: {
+          type: 'bar',
+          height: 350,
+          stacked: true,
+          stackType: '100%'
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+          },
+        },
+        stroke: {
+          width: 1,
+          colors: ['#fff']
+        },
+        xaxis: {
+          categories: [],
+          show: false
+        },
+        yaxis: {
+          categories: [],
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val ;
+            }
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'left',
+          offsetX: 40
+        }
+      },
+    };
 
-  return (
-    <div>
-      <Grid container spacing={1}>
-        <Grid item xs={4} mr={5}>
-        <Typography variant="p" sx={{ fontWeight: '400' }} mb={1}>
-            Période :
-          </Typography>
-          <input
-            type="date"
-            className="form-control"
-            max={new Date().toISOString().split('T')[0]}
-          />
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="p" sx={{ fontWeight: '400' }} mb={1}>
-            De :
-          </Typography>
-          <input type="time" className="form-control" />
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="p" sx={{ fontWeight: '400' }} mb={1}>
-            à :
-          </Typography>
-          <input type="time" className="form-control" />
-        </Grid>
-      </Grid>
-      <ResponsiveContainer width="100%" height={100}>
-        <BarChart
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <XAxis dataKey="time" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="status" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
+    // Bind the context of handleError to the component
+    this.handleError = this.handleError.bind(this);
+  }
 
-export default ActivationPeriod;
+  componentDidMount() {
+    this.fetchData();
+  }
+  
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedDetail !== this.props.selectedDetail ||
+      prevProps.selectedDateFrom !== this.props.selectedDateFrom
+    ) {
+      this.fetchData();
+    }
+  }
+
+  handleError(error) {
+    Swal.fire({
+      icon: 'error',
+      text: error,
+      width: '30%',
+      confirmButtonText: "Ok, j'ai compris!",
+      confirmButtonColor: '#0095E8',
+    });
+  }
+
+  async fetchData() {
+    const { selectedDetail, selectedDateFrom } = this.props;
+
+    if (selectedDetail && selectedDateFrom) {
+      const token = localStorage.getItem('token');
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+      const url = `${BASE_URL}/${api_version}/reports/ad_status?hp_cs_authorization=${accessToken}&date=${selectedDateFrom}&ad_id=${selectedDetail}`;
+
+      try {
+        const response = await axios.get(url);
+        const data = response.data;
+        
+        if (response.status === 404) {
+          this.handleError('Aucune donnée trouvée !');
+          return;
+        }
+
+        if (response.status !== 200) {
+          throw new Error('Network response was not ok');
+        }
+        
+        const categories = [];
+        const seriesData = [];
+
+        data.forEach(item => {
+          categories.push(item.hour + 'h');
+          seriesData.push(parseInt(item.total_cover));
+        });
+
+        this.setState({
+          options: {
+            ...this.state.options,
+            xaxis: {
+              ...this.state.options.xaxis,
+              categories: categories
+            }
+          },
+          series: [{
+            name: 'Total Cover',
+            data: seriesData
+          }]
+        });
+      } catch (error) {
+        console.error("There was an error fetching the data!", error);
+        this.handleError('Aucune donnée trouvée !');
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+      </div>
+    );
+  }
+}
+
+export default Periode;

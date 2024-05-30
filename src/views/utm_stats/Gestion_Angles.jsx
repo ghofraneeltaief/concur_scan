@@ -212,20 +212,23 @@ function Angles() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ label: newKeyword.trim() }),
-          },
+          }
         );
-
         if (response.ok) {
-          const data = await response.json();
-          const newKeywordId = data.keyword_id;
-          const newKeywordWithId = { ...data, id: newKeywordId.toString() };
-          setKeywords([...keywords, newKeywordWithId]);
-          setNewKeyword('');
-          setOpen(false);
-          Swal.fire({
-            icon: 'success',
-            text: `Keyword "${data.label}" added successfully!`,
-          });
+          const responseMessage = await response.json();
+          console.log('API Response:', responseMessage); // Affiche le message de réponse
+          // Si le message de réponse est "Keyword created", faites une requête supplémentaire
+          if (responseMessage[0] === "Keyword created") {
+            await fetchAllKeywords(); // Rafraîchir la liste des mots-clés
+            setNewKeyword('');
+            setOpen(false);
+            Swal.fire({
+              icon: 'success',
+              text: `Keyword "${newKeyword.trim()}" added successfully!`,
+            });
+          } else {
+            throw new Error('Unexpected response from the server');
+          }
         } else {
           throw new Error('Failed to add new keyword');
         }
@@ -321,14 +324,14 @@ function Angles() {
                 </Box>
               </Box>
             </Modal>
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ height: 600, width: '100%' }}>
               <DataGrid
                 slots={{
                   toolbar: GridToolbar,
                 }}
                 rows={rows}
                 columns={columns}
-                pageSize={5}
+                pageSize={10}
                 rowsPerPageOptions={[5, 10, 20]}
                 components={{ Toolbar: GridToolbar }}
               />

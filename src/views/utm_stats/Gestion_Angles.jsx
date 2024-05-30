@@ -6,8 +6,12 @@ import {
   Modal,
   TextField,
   IconButton,
-  Paper,
-  Container,
+  TableContainer,
+  TableHead,
+  TableBody,
+  Table,
+  TableRow,
+  TableCell,
 } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Select from 'react-select';
@@ -272,7 +276,7 @@ function Angles() {
       },
     },
   };
-
+  console.log(assignedKeywords);
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
@@ -355,35 +359,44 @@ function Angles() {
             {selectedVertical && (
               <Box mt={2}>
                 <Typography variant="h6">Angle attribués pour {selectedOptions?.label}</Typography>
-                <Container>
-                  {assignedKeywords.length > 0 ? (
-                    assignedKeywords
-                      .filter((keyword) => keyword.keyword_id && keyword.keyword_label) // Ensure no empty elements
-                      .map((keyword) => (
-                        <Paper
-                          key={keyword.keyword_id}
-                          elevation={1}
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 1,
-                            marginBottom: 1,
-                          }}
-                        >
-                          <Typography>{keyword.keyword_label}</Typography>
-                          <IconButton
-                            color="secondary"
-                            onClick={() => handleRemoveKeywordFromVertical(keyword)}
-                          >
-                            <DeleteIcon color='error'/>
-                          </IconButton>
-                        </Paper>
-                      ))
-                  ) : (
-                    <Typography>Aucun Angle attribué à ce verticale.</Typography>
-                  )}
-                </Container>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Angle</TableCell>
+                        <TableCell align="right">Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {assignedKeywords.length === 1 &&
+                      assignedKeywords[0] === 'No Keywords founded' ? (
+                        <TableRow>
+                          <TableCell colSpan={2}>
+                            <Typography align="center">
+                              Aucun Angle attribué à ce vertical.
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        assignedKeywords
+                          .filter((keyword) => keyword.keyword_id && keyword.keyword_label)
+                          .map((keyword) => (
+                            <TableRow key={keyword.keyword_id}>
+                              <TableCell>{keyword.keyword_label}</TableCell>
+                              <TableCell align="right">
+                                <IconButton
+                                  color="error"
+                                  onClick={() => handleRemoveKeywordFromVertical(keyword)}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Box>
             )}
           </DashboardCard>

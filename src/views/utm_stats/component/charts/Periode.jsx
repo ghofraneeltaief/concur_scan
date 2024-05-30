@@ -9,129 +9,105 @@ class Periode extends React.Component {
     super(props);
 
     this.state = {
-      series: [],
+    
+      series: [
+        // George Washington
+        {
+          name: 'George Washington',
+          data: [
+            {
+              x: '1',
+              y: [
+                new Date(1789, 3, 30).getTime(),
+                new Date(1797, 2, 4).getTime()
+              ]
+            },
+          ]
+        },
+        // John Adams
+        {
+          name: 'John Adams',
+          data: [
+            {
+              x: '1',
+              y: [
+                new Date(1797, 2, 4).getTime(),
+                new Date(1801, 2, 4).getTime()
+              ]
+            },
+          ]
+        },
+      ],
       options: {
         chart: {
-          type: 'bar',
           height: 350,
-          stacked: true,
-          stackType: '100%'
+          type: 'rangeBar'
         },
         plotOptions: {
           bar: {
             horizontal: true,
-          },
-        },
-        stroke: {
-          width: 1,
-          colors: ['#fff']
-        },
-        xaxis: {
-          categories: [],
-          show: false
-        },
-        yaxis: {
-          categories: [],
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return val ;
-            }
+            barHeight: '50%',
+            rangeBarGroupRows: true
           }
         },
+        colors: [
+          "#008FFB", "#00E396"
+        ],
         fill: {
-          opacity: 1
+          type: 'solid'
+        },
+        xaxis: {
+          type: 'datetime',
+          show: false
         },
         legend: {
-          position: 'top',
-          horizontalAlign: 'left',
-          offsetX: 40
+          position: 'right'
+        },
+        tooltip: {
+          custom: function(opts) {
+            const fromYear = new Date(opts.y1).getFullYear()
+            const toYear = new Date(opts.y2).getFullYear()
+        
+            const w = opts.ctx.w
+            let ylabel = w.globals.labels[opts.dataPointIndex]
+            let seriesName = w.config.series[opts.seriesIndex].name
+              ? w.config.series[opts.seriesIndex].name
+              : ''
+            const color = w.globals.colors[opts.seriesIndex]
+        
+            return (
+              '<div class="apexcharts-tooltip-rangebar">' +
+              '<div> <span class="series-name" style="color: ' +
+              color +
+              '">' +
+              (seriesName ? seriesName : '') +
+              '</span></div>' +
+              '<div> <span class="category">' +
+              ylabel +
+              ' </span> <span class="value start-value">' +
+              fromYear +
+              '</span> <span class="separator">-</span> <span class="value end-value">' +
+              toYear +
+              '</span></div>' +
+              '</div>'
+            )
+          }
         }
       },
+    
+    
     };
-
-    // Bind the context of handleError to the component
-    this.handleError = this.handleError.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
-  
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.selectedDetail !== this.props.selectedDetail ||
-      prevProps.selectedDateFrom !== this.props.selectedDateFrom
-    ) {
-      this.fetchData();
-    }
-  }
 
-  handleError(error) {
-    Swal.fire({
-      icon: 'error',
-      text: error,
-      width: '30%',
-      confirmButtonText: "Ok, j'ai compris!",
-      confirmButtonColor: '#0095E8',
-    });
-  }
-
-  async fetchData() {
-    const { selectedDetail, selectedDateFrom } = this.props;
-
-    if (selectedDetail && selectedDateFrom) {
-      const token = localStorage.getItem('token');
-      const responseObject = JSON.parse(token);
-      const accessToken = responseObject.access_token;
-      const url = `${BASE_URL}/${api_version}/reports/ad_status?hp_cs_authorization=${accessToken}&date=${selectedDateFrom}&ad_id=${selectedDetail}`;
-
-      try {
-        const response = await axios.get(url);
-        const data = response.data;
-        
-        if (response.status === 404) {
-          this.handleError('Aucune donnée trouvée !');
-          return;
-        }
-
-        if (response.status !== 200) {
-          throw new Error('Network response was not ok');
-        }
-        
-        const categories = [];
-        const seriesData = [];
-
-        data.forEach(item => {
-          categories.push(item.hour + 'h');
-          seriesData.push(parseInt(item.total_cover));
-        });
-
-        this.setState({
-          options: {
-            ...this.state.options,
-            xaxis: {
-              ...this.state.options.xaxis,
-              categories: categories
-            }
-          },
-          series: [{
-            name: 'Total Cover',
-            data: seriesData
-          }]
-        });
-      } catch (error) {
-        console.error("There was an error fetching the data!", error);
-        this.handleError('Aucune donnée trouvée !');
-      }
-    }
-  }
 
   render() {
     return (
       <div>
-        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+        <div id="chart">
+          <ReactApexChart options={this.state.options} series={this.state.series} type="rangeBar" height={350} />
+        </div>
+        <div id="html-dist"></div>
       </div>
     );
   }

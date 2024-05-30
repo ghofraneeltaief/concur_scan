@@ -14,6 +14,7 @@ function Component({
   onRecalculateClick,
 }) {
   const [selectedOptions, setSelectedOptions] = useState(null);
+  const today = new Date().toISOString().substr(0, 10);
   async function getToken() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -39,15 +40,18 @@ function Component({
     } catch (error) {
       console.error(error);
     }
+    onDateFromSelect(today);
+    onDateToSelect(today);
   };
   useEffect(() => {
     fetchVerticals();
-  }, []);
+    
+  }, [onDateFromSelect, onDateToSelect]);
 
   const [verticals, setVerticals] = useState([]);
   const [selectedVertical, setSelectedVertical] = useState([]);
-  const [selectedDateFrom, setSelectedDateFrom] = useState(new Date().toISOString().substr(0, 10));
-  const [selectedDateTo, setSelectedDateTo] = useState(new Date().toISOString().substr(0, 10));
+  const [selectedDateFrom, setSelectedDateFrom] = useState(today);
+  const [selectedDateTo, setSelectedDateTo] = useState(today);
 
   const handleVerticalSelect = (selectedOption) => {
     setSelectedVertical(selectedOption); // Mettre à jour l'état avec la nouvelle option sélectionnée
@@ -64,21 +68,6 @@ function Component({
     onDateToSelect(dateTo);
   };
 
-  const handleRecalculate = async () => {
-    try {
-      const verticalIds = selectedVertical.map((vertical) => vertical.value);
-      const verticalNames = selectedVertical.map((value) => value.label);
-      onVerticalSelectName(verticalNames);
-      onVerticalSelect(verticalIds);
-      onDateFromSelect(selectedDateFrom);
-      onDateToSelect(selectedDateTo);
-      if (onRecalculateClick) {
-        onRecalculateClick();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
   // Calculer la date maximale autorisée (30 jours à partir de la date actuelle)
   const currentDate = new Date();
   const minDate = new Date(

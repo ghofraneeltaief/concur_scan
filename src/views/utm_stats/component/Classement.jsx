@@ -185,12 +185,12 @@ function Classement({onSelectedPage}) {
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Logo" subtitle="Page 1">
-            <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={7.4}>
+          <DashboardCard title="Logo" >
+            {/*<Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={7.4}>
               <Box gridColumn="span 8">
                 <img src={logo} style={{ width: '180px', height: '150px' }} />
               </Box>
-            </Box>
+            </Box>*/}
           </DashboardCard>
         </Box>
       </Box>

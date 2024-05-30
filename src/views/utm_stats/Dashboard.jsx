@@ -97,7 +97,6 @@ function Dashboard() {
           </Box>
         </Box>
       </TabContext>
-      <DashboardCard>
         <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
           <Box gridColumn="span 12">
             <Component
@@ -150,7 +149,6 @@ function Dashboard() {
             )}
           </Box>
         </Box>
-      </DashboardCard>
     </Box>
   );
 }

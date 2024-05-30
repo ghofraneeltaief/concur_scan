@@ -81,7 +81,7 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
 
   const handleError = (error) => {
     Swal.fire({
-      icon: 'error',
+      icon: 'info',
       text: error,
       width: '30%',
       confirmButtonText: "Ok, j'ai compris!",

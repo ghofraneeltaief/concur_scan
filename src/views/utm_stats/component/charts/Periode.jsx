@@ -102,7 +102,7 @@ const Periode = ({ selectedDetail }) => {
           />
           <YAxis type="category" dataKey="status" />
           <Tooltip />
-          <Line type="monotone" dataKey="status" stroke="#0F9D58" />
+          <Line type="monotone" dataKey="status" stroke="#0F9D58" strokeWidth={2}/>
         </LineChart>
       </ResponsiveContainer>
     </>

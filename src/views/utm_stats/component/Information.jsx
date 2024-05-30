@@ -74,37 +74,25 @@ function Information({
           <Box gridColumn="span 8">
           {adDetail && (
               <DashboardCard>
-                <Typography variant="h7">
-                  ID : <Typography variant="subtitle1">{adDetail.ad_external_id}</Typography>
+                <Typography variant="h7" component="div">
+                  ID : <Typography variant="subtitle1" component="span">{adDetail.ad_external_id}</Typography>
                 </Typography>
-                <Typography variant="h7">
-                  Statut : <Typography variant="subtitle1"></Typography>
+                <Typography variant="h7" component="div">
+                  Statut : <Typography variant="subtitle1" component="span"></Typography>
                 </Typography>
-                <Typography variant="h7">
+                <Typography variant="h7" component="div">
                   1ère diffusion :{' '}
-                  <Typography variant="subtitle1">{adDetail.ad_creation_time}</Typography>
+                  <Typography variant="subtitle1" component="span">{adDetail.ad_creation_time}</Typography>
                 </Typography>
-                <Typography variant="h7">
-                  Placement : <Typography variant="subtitle1"></Typography>
+                <Typography variant="h7" component="div">
+                  Placement : <Typography variant="subtitle1" component="span"></Typography>
                 </Typography>
-                <Typography variant="h7">
-                  NB couverture : <Typography variant="subtitle1"></Typography>
+                <Typography variant="h7" component="div">
+                  NB couverture : <Typography variant="subtitle1" component="span"></Typography>
                 </Typography>
-                <Typography variant="h7">
+                <Typography variant="h7" component="div">
                   Page de redirection : 
-                </Typography><a href={adDetail.url}>{adDetail.url}</a>
-              </DashboardCard>
-            )}
-          </Box>
-          <Box gridColumn="span 8">
-            <DashboardCard title="Période activation">
-              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom}/>
-            </DashboardCard>
-          </Box>
-          <Box gridColumn="span 8">
-          {adDetail && (
-              <DashboardCard title={adDetail.ad_creative_link_titles}>
-                <Typography>{adDetail.ad_creative_bodies}</Typography>
+                </Typography> <Typography variant="subtitle1" component="span"><a href={adDetail.url}>{adDetail.url}</a></Typography>
               </DashboardCard>
             )}
           </Box>

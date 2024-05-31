@@ -45,7 +45,6 @@ function Component({
   };
   useEffect(() => {
     fetchVerticals();
-    
   }, [onDateFromSelect, onDateToSelect]);
 
   const [verticals, setVerticals] = useState([]);
@@ -75,44 +74,44 @@ function Component({
     currentDate.getMonth() - 1,
     currentDate.getDate(),
   );
- /* Begin: Style select */
- const ITEM_HEIGHT = 30;
- const ITEM_PADDING_TOP = 8;
- const MenuProps = {
-   PaperProps: {
-     style: {
-       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-       width: 270,
-     },
-   },
- };
- /* End: Style select */
+  /* Begin: Style select */
+  const ITEM_HEIGHT = 30;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 270,
+      },
+    },
+  };
+  /* End: Style select */
   return (
     <>
-    <Typography variant="h6" mb={3}>
-    Benchmark Concurrentiel - Facebook
-          </Typography>
+      <Typography variant="h6" mb={3}>
+        Benchmark Concurrentiel - Facebook
+      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={4.4}>
           <Typography variant="h6" mb={1}>
             Verticales
           </Typography>
           <Select
-                defaultValue={selectedOptions}
-                onChange={handleVerticalSelect}
-                options={verticals.map((vertical) => ({
-                  value: vertical.vertical_id,
-                  label: vertical.codified_name,
-                }))}
-                isSearchable={true}
-                name="Verticale"
-                placeholder="Verticales"
-                MenuProps={MenuProps}
-                className="basic-single"
-                classNamePrefix="select"
-                menuPortalTarget={document.body}
-                menuPosition={'fixed'}
-              />
+            defaultValue={selectedOptions}
+            onChange={handleVerticalSelect}
+            options={verticals.map((vertical) => ({
+              value: vertical.vertical_id,
+              label: vertical.codified_name,
+            }))}
+            isSearchable={true}
+            name="Verticale"
+            placeholder="Verticales"
+            MenuProps={MenuProps}
+            className="basic-single"
+            classNamePrefix="select"
+            menuPortalTarget={document.body}
+            menuPosition={'fixed'}
+          />
         </Grid>
         <Grid item xs={3.6}>
           <Typography variant="h6" sx={{ fontWeight: '400' }}>

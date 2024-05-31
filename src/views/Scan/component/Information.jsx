@@ -87,15 +87,15 @@ function Information({
             )}
           </Box>
           <Box gridColumn="span 8">
-            <DashboardCard title="Période activation">
-              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom}/>
-            </DashboardCard>
-          </Box>
-          <Box gridColumn="span 8">
             <DashboardCard title="Cible">
               <Cible_byAd
                 selectedDetail={selectedDetail}
               />
+            </DashboardCard>
+          </Box>
+          <Box gridColumn="span 10">
+            <DashboardCard title="Période activation">
+              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom}/>
             </DashboardCard>
           </Box>
         </Box>

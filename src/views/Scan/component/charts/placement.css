@@ -1,0 +1,14 @@
+.chart-container {
+    display: flex;
+    justify-content: space-around; /* Space the items evenly */
+    align-items: center; /* Align items vertically in the center */
+    flex-wrap: wrap; /* Wrap items if needed */
+  }
+  
+  .chart-item {
+    margin: 20px;
+    flex: 1; /* Flex-grow to make items take equal space */
+    min-width: 300px; /* Minimum width to ensure responsiveness */
+    text-align: center; /* Center-align text */
+  }
+  

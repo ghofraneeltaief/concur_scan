@@ -4,11 +4,11 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 /* ****Pages***** */
-const Gestion_pages = Loadable(lazy(() => import('../views/utm_stats/Gestion_pages')))
-const Gestion_concurrents = Loadable(lazy(() => import('../views/utm_stats/Gestion_concurrents')))
+const Gestion_pages = Loadable(lazy(() => import('../views/Scan/Gestion_pages')))
+const Gestion_concurrents = Loadable(lazy(() => import('../views/Scan/Gestion_concurrents')))
 const Login = Loadable(lazy(() => import('../views/authentication/login')))
-const Gestion_Angles = Loadable(lazy(() => import('../views/utm_stats/Gestion_Angles')))
-const Dashboard = Loadable(lazy(() => import('../views/utm_stats/Dashboard')))
+const Gestion_Angles = Loadable(lazy(() => import('../views/Scan/Gestion_Angles')))
+const Dashboard = Loadable(lazy(() => import('../views/Scan/Dashboard')))
 // Fonction pour vérifier l'authentification de l'utilisateur
 const isAuthenticated = () => {
   // Vérifie si le token est présent dans le localStorage et s'il est valide

@@ -9,10 +9,13 @@ import Repartition from './charts/Repartition';
 function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage }) {
   return (
     <Box sx={{ width: 1 }}>
-      <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
-        <Box gridColumn="span 4">
+      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+        <Box gridColumn="span 8">
           <DashboardCard title="Répartition placement" subtitle="Page 1">
-            <Placement />
+            <Placement selectedVerticalId={selectedVerticalId}
+              selectedDateFrom={selectedDateFrom}
+              selectedDateTo={selectedDateTo}
+              selectedPage={selectedPage}/>
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
@@ -23,9 +26,10 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
               selectedDateTo={selectedDateTo}
               selectedPage={selectedPage}
             />
-            <Typography variant="h6" component="h2" mt={4} mb={2}>
-            Répartition Géolocalisation
-                </Typography>
+          </DashboardCard>
+        </Box>
+        <Box gridColumn="span 4">
+          <DashboardCard title="Répartition Géolocalisation" >
             <Repartition
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}

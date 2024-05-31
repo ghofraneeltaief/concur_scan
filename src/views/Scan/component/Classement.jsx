@@ -97,10 +97,10 @@ function Classement({onSelectedPage}) {
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
         <Box gridColumn="span 6">
-          <DashboardCard title="Classement concurrent" subtitle="par nombre d’ouverture">
+          <DashboardCard title="Classement concurrent" subtitle="par nombre d’ouverture" height="500px">
             <TableContainer
               component={Paper}
-              sx={{ boxShadow: 'none', maxHeight: '300px', overflowY: 'auto' }}
+              sx={{ boxShadow: 'none', overflowY: 'auto' }}
             >
               <Table stickyHeader>
                 <TableHead>
@@ -141,10 +141,10 @@ function Classement({onSelectedPage}) {
           </DashboardCard>
         </Box>
         <Box gridColumn="span 6">
-          <DashboardCard title="Classement page" subtitle="pour le concurrent sélectionné">
+          <DashboardCard title="Classement page" subtitle="pour le concurrent sélectionné" height="500px">
             <TableContainer
               component={Paper}
-              sx={{ boxShadow: 'none', maxHeight: '300px', overflowY: 'auto' }}
+              sx={{ boxShadow: 'none', overflowY: 'auto' }}
             >
               <Table stickyHeader>
                 <TableHead>
@@ -185,7 +185,7 @@ function Classement({onSelectedPage}) {
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Logo" >
+          <DashboardCard title="Logo" height="500px">
             {/*<Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={7.4}>
               <Box gridColumn="span 8">
                 <img src={logo} style={{ width: '180px', height: '150px' }} />

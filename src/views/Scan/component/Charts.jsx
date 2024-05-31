@@ -19,7 +19,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Répartition média" >
+          <DashboardCard title="Répartition média" height="470px">
             <Media
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
@@ -29,7 +29,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Répartition Géolocalisation" >
+          <DashboardCard title="Répartition Géolocalisation" height="500px">
             <Repartition
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
@@ -39,7 +39,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Cible" subtitle="Page 1">
+          <DashboardCard title="Cible" subtitle="Page 1" height="500px">
             <Cible
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
@@ -49,7 +49,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Tendance Angle" subtitle="Page 1">
+          <DashboardCard title="Tendance Angle" subtitle="Page 1" height="500px">
             <Tendance />
           </DashboardCard>
         </Box>

@@ -15,7 +15,7 @@ import { BASE_URL, api_version } from '../../../authentication/config';
 import { Grid } from '@mui/material';
 const generateFullHourRange = () => {
   const hours = [];
-  for (let i = 7; i <= 23; i++) {
+  for (let i = 0; i <= 23; i++) {
     hours.push(i);
   }
   return hours;
@@ -97,8 +97,8 @@ const Periode = ({ selectedDetail }) => {
         <LineChart data={chartData}>
           <XAxis
             dataKey="hour"
-            domain={[7, 23]}
-            ticks={[7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
+            domain={[0, 23]}
+            ticks={[0,1,2,3 ,4 ,5,6,7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}
           />
           <YAxis type="category" dataKey="status" />
           <Tooltip />

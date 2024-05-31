@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { BASE_URL, api_version } from '../../../authentication/config';
 import { Box } from '@mui/material';
 import "./placement.css";
 
-Chart.register(ArcElement, Tooltip, Legend, Title);
+Chart.register(ArcElement, Tooltip, Legend, Title, ChartDataLabels);
 
 const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage }) => {
   const [autoCount, setAutoCount] = useState(0);
@@ -108,6 +109,18 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
             return `${tooltipItem.label}: ${tooltipItem.raw}`;
           }
         }
+      },
+      datalabels: {
+        formatter: (value, ctx) => {
+          let sum = 0;
+          let dataArr = ctx.chart.data.datasets[0].data;
+          dataArr.map(data => {
+            sum += data;
+          });
+          let percentage = (value * 100 / sum).toFixed(2) + "%";
+          return percentage;
+        },
+        color: '#fff',
       }
     }
   };
@@ -115,12 +128,16 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
   return (
     <div className="chart-container">
       <div className="chart-item">
-        <h2>Total Count</h2>
-        <Doughnut data={totalChartData} options={options} />
+        <h2>Totale Count</h2>
+        <div className="doughnut-container">
+          <Doughnut data={totalChartData} options={options} />
+        </div>
       </div>
       <div className="chart-item">
-        <h2>Manual Publisher Platform Labels</h2>
-        <Doughnut data={manualChartData} options={options} />
+        <h2>Détails Manual</h2>
+        <div className="doughnut-container">
+          <Doughnut data={manualChartData} options={options} />
+        </div>
       </div>
     </div>
   );

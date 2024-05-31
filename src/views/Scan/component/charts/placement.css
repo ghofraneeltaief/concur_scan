@@ -1,14 +1,19 @@
 .chart-container {
     display: flex;
-    justify-content: space-around; /* Space the items evenly */
-    align-items: center; /* Align items vertically in the center */
-    flex-wrap: wrap; /* Wrap items if needed */
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
   }
   
   .chart-item {
     margin: 20px;
-    flex: 1; /* Flex-grow to make items take equal space */
-    min-width: 300px; /* Minimum width to ensure responsiveness */
-    text-align: center; /* Center-align text */
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
   }
   
+  .doughnut-container {
+    width: 250px; /* Adjust the width to your desired size */
+    height: 250px; /* Adjust the height to your desired size */
+    margin: 0 auto; /* Center the doughnut chart */
+  }

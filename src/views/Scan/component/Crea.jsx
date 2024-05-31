@@ -97,11 +97,12 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
             <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} key={adIndex}>
               {ad.map((row, index) => (
                 <Box gridColumn="span 3" key={index}>
-                  <DashboardCard title={row.page_name} >
+                  <DashboardCard title={row.page_name} height="400px">
                     <Typography>{truncateText(row.ad_creative_bodies, 20, 100)}</Typography> {/* 20 words or 100 characters limit */}
-                    <Box mt={2}>
+                    <Box mt={2} mb={2}>
                       <Button variant="contained" onClick={() => handleViewDetail(row.ad_id)}>Voir détail</Button>
                     </Box>
+                    <img src={row.image_preview}></img>
                   </DashboardCard>
                 </Box>
               ))}

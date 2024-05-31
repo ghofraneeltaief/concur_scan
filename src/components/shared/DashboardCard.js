@@ -13,11 +13,12 @@ const DashboardCard = ({
   middlecontent,
   backgroundColor,
   color,
+  height,
 }) => {
 
   return (
     <Card
-      sx={{ padding: 0, backgroundColor,color}}
+      sx={{ padding: 0, backgroundColor,color, height}}
       elevation={9}
       variant={undefined}
     >

@@ -91,7 +91,7 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
   };
   return (
     <Box sx={{ width: 1 }}>
-      <DashboardCard title="Classement Créa">
+      <DashboardCard title="Classement Créa"  pb={4}>
         <Carousel showThumbs={false} showIndicators={false}>
           {ADSChunks.map((ad, adIndex) => (
             <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} key={adIndex}>

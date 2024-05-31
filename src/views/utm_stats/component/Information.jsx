@@ -5,7 +5,7 @@ import DashboardCard from 'src/components/shared/DashboardCard';
 import { BASE_URL, api_version } from '../../authentication/config';
 import Swal from 'sweetalert2';
 import Cible_byAd from './charts/Cible_byAd';
-import Repartition from './charts/Repartition';
+
 import Periode from './charts/Periode';
 
 function Information({
@@ -74,40 +74,24 @@ function Information({
           <Box gridColumn="span 8">
           {adDetail && (
               <DashboardCard>
-                <Typography variant="h7" component="div">
-                  ID : <Typography variant="subtitle1" component="span">{adDetail.ad_external_id}</Typography>
-                </Typography>
-                <Typography variant="h7" component="div">
-                  Statut : <Typography variant="subtitle1" component="span"></Typography>
-                </Typography>
-                <Typography variant="h7" component="div">
-                  1ère diffusion :{' '}
-                  <Typography variant="subtitle1" component="span">{adDetail.ad_creation_time}</Typography>
-                </Typography>
-                <Typography variant="h7" component="div">
-                  Placement : <Typography variant="subtitle1" component="span"></Typography>
-                </Typography>
-                <Typography variant="h7" component="div">
-                  NB couverture : <Typography variant="subtitle1" component="span"></Typography>
-                </Typography>
-                <Typography variant="h7" component="div">
-                  Page de redirection :  
-                </Typography> <Typography variant="subtitle1" component="span"><a href={adDetail.url}>{adDetail.url}</a></Typography>
+                 <div className="iframe-container">
+                  <iframe 
+                    src={adDetail.url}
+                    width="100%" 
+                    height="400" 
+                    title="Iframe"
+                    className="custom-iframe"
+                  />
+                </div>
               </DashboardCard>
             )}
           </Box>
-
-          <Box gridColumn="span 4">
-            <DashboardCard title="Répartition Géolocalisation">
-              <Repartition
-                selectedVerticalId={selectedVerticalId}
-                selectedDateFrom={selectedDateFrom}
-                selectedDateTo={selectedDateTo}
-                selectedPage={selectedPage}
-              />
+          <Box gridColumn="span 8">
+            <DashboardCard title="Période activation">
+              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom}/>
             </DashboardCard>
           </Box>
-          <Box gridColumn="span 4">
+          <Box gridColumn="span 8">
             <DashboardCard title="Cible">
               <Cible_byAd
                 selectedDetail={selectedDetail}

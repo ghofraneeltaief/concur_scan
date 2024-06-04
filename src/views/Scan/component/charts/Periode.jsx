@@ -13,6 +13,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { BASE_URL, api_version } from '../../../authentication/config';
 import { Grid } from '@mui/material';
+
+// Generate an array with full hour range from 0 to 23
 const generateFullHourRange = () => {
   const hours = [];
   for (let i = 0; i <= 23; i++) {
@@ -21,10 +23,11 @@ const generateFullHourRange = () => {
   return hours;
 };
 
+// Format the data to match the structure needed by the chart
 const formatData = (data) => {
   const fullHours = generateFullHourRange();
   const formattedData = fullHours.map((hour) => {
-    const found = data.find((item) => parseInt(item.hour) === hour);
+    const found = data[hour];
     return {
       hour,
       status: found ? 'Active' : 'Inactive',
@@ -33,6 +36,7 @@ const formatData = (data) => {
   return formattedData;
 };
 
+// Handle API errors
 const handleError = (error) => {
   Swal.fire({
     icon: 'info',
@@ -43,10 +47,12 @@ const handleError = (error) => {
   });
 };
 
+// Component for rendering the period chart
 const Periode = ({ selectedDetail }) => {
   const [chartData, setChartData] = useState([]);
   const today = new Date().toISOString().substr(0, 10);
   const [selectedDateFrom, setSelectedDateFrom] = useState(today);
+
   useEffect(() => {
     const fetchData = async () => {
       if (selectedDateFrom && selectedDetail) {
@@ -77,9 +83,11 @@ const Periode = ({ selectedDetail }) => {
 
     fetchData();
   }, [selectedDateFrom, selectedDetail]);
+
   const handleDateFromChange = (dateFrom) => {
     setSelectedDateFrom(dateFrom);
   };
+
   return (
     <>
       <Grid container spacing={3} mb={2}>
@@ -93,16 +101,16 @@ const Periode = ({ selectedDetail }) => {
           />
         </Grid>
       </Grid>
-      <ResponsiveContainer width="100%" height={120}>
+      <ResponsiveContainer width="100%" height={100}>
         <LineChart data={chartData}>
           <XAxis
             dataKey="hour"
             domain={[0, 23]}
-            ticks={[0,1,2,3 ,4 ,5,6,7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,21 ,22  ,23]}
+            ticks={generateFullHourRange()}
           />
           <YAxis type="category" dataKey="status" />
           <Tooltip />
-          <Line type="monotone" dataKey="status" stroke="#0F9D58" strokeWidth={2}/>
+          <Line type="monotone" dataKey="status" stroke="#0F9D58" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </>

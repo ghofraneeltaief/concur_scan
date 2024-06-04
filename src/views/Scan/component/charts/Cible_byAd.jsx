@@ -107,7 +107,7 @@ class Cible_byAd extends React.Component {
   render() {
     return (
       <div>
-        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={320} />
       </div>
     );
   }

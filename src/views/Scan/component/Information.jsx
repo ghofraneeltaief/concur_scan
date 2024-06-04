@@ -5,7 +5,7 @@ import DashboardCard from 'src/components/shared/DashboardCard';
 import { BASE_URL, api_version } from '../../authentication/config';
 import Swal from 'sweetalert2';
 import Cible_byAd from './charts/Cible_byAd';
-
+import Repartition from './charts/Repartition';
 import Periode from './charts/Periode';
 
 function Information({
@@ -71,32 +71,49 @@ function Information({
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Information Créa">
         <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
-          <Box gridColumn="span 8">
-          {adDetail && (
-              <DashboardCard>
-                 <div className="iframe-container">
-                  <iframe 
-                    src={adDetail.url}
-                    width="100%" 
-                    height="400" 
-                    title="Iframe"
-                    className="custom-iframe"
-                  />
-                </div>
+          <Box gridColumn="span 7">
+            {adDetail && (
+              <DashboardCard mb="2" height="730px">
+                <Typography variant="h6" component="div">
+                  ID :{' '}
+                  <Typography variant="body1" component="span">
+                    {adDetail.ad_external_id}
+                  </Typography>
+                </Typography>
+                <Typography variant="h6" component="div" mt={2}>
+                  1ère diffusion :{' '}
+                  <Typography variant="body1" component="span">
+                    {adDetail.ad_creation_time}
+                  </Typography>
+                </Typography>
+                <Typography variant="h6" component="div" mt={2}>
+                  Page de redirection :
+                  <Typography variant="body1" component="span">
+                    <a style={{ wordBreak: 'break-all', display: 'block' }} href={adDetail.url}>
+                      {adDetail.url}
+                    </a>
+                  </Typography>
+                </Typography>
+                <Typography variant="h4" mt={2}>
+                  {adDetail.ad_creative_link_titles}
+                </Typography>
+                <Typography variant="body1" mt={2}>
+                  {adDetail.ad_creative_bodies}
+                </Typography>
               </DashboardCard>
             )}
           </Box>
-          <Box gridColumn="span 8">
-            <DashboardCard title="Cible">
-              <Cible_byAd
-                selectedDetail={selectedDetail}
-              />
-            </DashboardCard>
-          </Box>
-          <Box gridColumn="span 10">
-            <DashboardCard title="Période activation">
-              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom}/>
-            </DashboardCard>
+          <Box gridColumn="span 9">
+            <Box gridColumn="span 8" mb={2}>
+              <DashboardCard title="Période activation" height="300px">
+                <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom} />
+              </DashboardCard>
+            </Box>{' '}
+            <Box gridColumn="span 8">
+              <DashboardCard title="Cible">
+                <Cible_byAd selectedDetail={selectedDetail} />
+              </DashboardCard>
+            </Box>
           </Box>
         </Box>
       </DashboardCard>

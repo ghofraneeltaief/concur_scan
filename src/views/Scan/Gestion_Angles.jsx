@@ -82,7 +82,7 @@ function Angles() {
       if (error.message === 'Unauthorized') {
         Swal.fire({
           icon: 'error',
-          text: 'Your session has expired. Please log in again.',
+          text: 'Votre session a expiré. Veuillez vous reconnecter.',
         }).then(() => {
           // Redirect to login or clear token
         });
@@ -110,7 +110,7 @@ function Angles() {
         if (error.message === 'Unauthorized') {
           Swal.fire({
             icon: 'error',
-            text: 'Your session has expired. Please log in again.',
+            text: 'Votre session a expiré. Veuillez vous reconnecter.',
           }).then(() => {
             // Redirect to login or clear token
           });
@@ -153,13 +153,13 @@ function Angles() {
           text: `Angel "${keyword.keyword_label}" ajouté avec success!`,
         });
       } else {
-        throw new Error('Failed to add keyword to vertical');
+        throw new Error('Impossible d`ajouter l`angle à la verticale.');
       }
     } catch (error) {
-      console.error('Error adding keyword to vertical:', error);
+      console.error('Erreur d`ajout l`angle à la verticale:', error);
       Swal.fire({
         icon: 'error',
-        text: `Error adding keyword: ${error.message}`,
+        text: `Erreur d'ajout l'angle: ${error.message}`,
       });
     }
   };
@@ -187,13 +187,13 @@ function Angles() {
           text: `Angel "${keyword.keyword_label}" supprimé avec success`,
         });
       } else {
-        throw new Error('Failed to remove keyword from vertical');
+        throw new Error('Impossible de supprimer l`angle de la verticale.');
       }
     } catch (error) {
       console.error('Error removing keyword from vertical:', error);
       Swal.fire({
         icon: 'error',
-        text: `Error removing keyword: ${error.message}`,
+        text: `Erreur de suppression l'angle de la verticale: ${error.message}`,
       });
     }
   };
@@ -224,26 +224,61 @@ function Angles() {
             setOpen(false);
             Swal.fire({
               icon: 'success',
-              text: `Keyword "${newKeyword.trim()}" added successfully!`,
+              text: `Keyword "${newKeyword.trim()}" ajouté avec succès!`,
             });
           } else {
-            throw new Error('Unexpected response from the server');
+            throw new Error('Réponse inattendue du serveur.');
           }
         } else {
-          throw new Error('Failed to add new keyword');
+          throw new Error('Échec de l`ajout du nouveau angle.');
         }
       } catch (error) {
-        console.error('Error adding new keyword:', error);
+        console.error('Erreur l`ajout du nouveau angle:', error);
         Swal.fire({
           icon: 'error',
-          text: `Error adding new keyword: ${error.message}`,
+          text: `Erreur lors de l'ajout du nouveau angle: ${error.message}`,
         });
       }
     }
   };
+  const handleAddKeywordToAllVerticals = async (keyword) => {
+    try {
+      const token = await getToken();
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+
+      for (const vertical of verticals) {
+        const response = await fetch(
+          `${BASE_URL}/${api_version}/verticals/keyword/${vertical.vertical_id}?hp_cs_authorization=${accessToken}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ keyword_id: keyword.keyword_id }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to add keyword to vertical ${vertical.vertical_id}`);
+        }
+      }
+
+      Swal.fire({
+        icon: 'success',
+        text: `Angle "${keyword.keyword_label}" ajouté à tous les verticales avec succès!`,
+      });
+    } catch (error) {
+      console.error('Erreur d`ajout l`angle à toutes les verticales:', error);
+      Swal.fire({
+        icon: 'error',
+        text: `Erreur d'ajout l'angle à toutes les verticales: ${error.message}`,
+      });
+    }
+  };
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 220 },
+    { field: 'id', headerName: 'ID', width: 100 },
     {
       field: 'Keywords',
       headerName: 'Angles',
@@ -258,6 +293,20 @@ function Angles() {
         <IconButton color="primary" onClick={() => handleAddKeywordToVertical(params.row)}>
           <AddIcon />
         </IconButton>
+      ),
+    },
+    {
+      field: ' Add to All',
+      headerName: 'Add to All',
+      width: 120,
+      renderCell: (params) => (
+        <Button
+          onClick={() => handleAddKeywordToAllVerticals(params.row)}
+          variant="contained"
+          color="primary"
+        >
+          Add to all
+        </Button>
       ),
     },
   ];

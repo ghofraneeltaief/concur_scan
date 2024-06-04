@@ -89,6 +89,11 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
     });
     setError(error);
   };
+  useEffect(() => {
+    if (selectedPage === null) {
+      onDetail(null);
+    }
+  }, [selectedPage, onDetail]);
   return (
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Classement Créa"  pb={4}>

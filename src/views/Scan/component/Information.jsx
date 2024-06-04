@@ -78,6 +78,11 @@ function Information({
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Information Créa">
         <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
+          <Box gridColumn="span 16" mb={2}>
+            <DashboardCard title="Période activation" height="300px">
+              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom} />
+            </DashboardCard>
+          </Box>
           <Box gridColumn="span 7">
             {adDetail && (
               <DashboardCard mb="2" height="745px">
@@ -122,11 +127,6 @@ function Information({
           <Box gridColumn="span 9">
             {selectedDetail && (
               <>
-                <Box gridColumn="span 8" mb={2}>
-                  <DashboardCard title="Période activation" height="300px">
-                    <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom} />
-                  </DashboardCard>
-                </Box>
                 <Box gridColumn="span 8">
                   <DashboardCard title="Cible">
                     <Cible_byAd selectedDetail={selectedDetail} />

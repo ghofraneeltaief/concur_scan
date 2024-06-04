@@ -10,7 +10,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 
-// Importez logos
+// Import logos
 import facebook from '../../assets/images/logos/facebook.png';
 import google from '../../assets/images/logos/google.png';
 
@@ -25,45 +25,40 @@ function Dashboard() {
     { icon: google, label: 'Google', value: '2' },
   ];
 
-  // Options pour le Select avec des cases à cocher
   const selectOptions = platforms.map((platform) => ({
     label: platform.label,
     value: platform.value,
   }));
-  // Filtrer les plateformes sélectionnées
+
   const selectedPlatforms = platforms.filter((platform) =>
     selectedOptions ? selectedOptions.some((option) => option.value === platform.value) : true,
   );
-  /* Begin: VerticalId */
-  const [selectedVerticalId, setSelectedVerticalId] = useState(''); // Initialiser l'état avec l'ID vertical de l'URL
+
+  const [selectedVerticalId, setSelectedVerticalId] = useState('');
   const handleVerticalSelect = (verticalId) => {
-    setSelectedVerticalId(verticalId); // Mettre à jour l'ID vertical lorsque sélectionné dans Selection
+    setSelectedVerticalId(verticalId);
   };
-  /* End: VerticalId */
-  /* Begin: Date From */
+
   const [selectedDateFrom, setSelectedDateFrom] = useState(null);
   const handleDateFromSelect = (dateFrom) => {
     setSelectedDateFrom(dateFrom);
   };
-  /* End: Date From */
-  /* Begin: Date To */
+
   const [selectedDateTo, setSelectedDateTo] = useState(null);
   const handleDateToSelect = (dateTo) => {
     setSelectedDateTo(dateTo);
   };
-  /* End: Date To */
-  /* Begin: Page */
+
   const [selectedPage, setSelectedPage] = useState(null);
-  const handlePageSelect = (Page) => {
-    setSelectedPage(Page);
+  const handlePageSelect = (page) => {
+    setSelectedPage(page);
   };
-  /* End: Page */
-  /* Begin: Detail */
+
   const [selectedDetail, setSelectedDetail] = useState(null);
-  const handleDetailSelect = (Detail) => {
-    setSelectedDetail(Detail);
+  const handleDetailSelect = (detail) => {
+    setSelectedDetail(detail);
   };
-  /* End: Detail */
+
   return (
     <Box sx={{ width: 1 }}>
       <TabContext value={value}>
@@ -97,19 +92,18 @@ function Dashboard() {
           </Box>
         </Box>
       </TabContext>
-        <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
-          <Box gridColumn="span 12">
-            <Component
-              onVerticalSelect={handleVerticalSelect}
-              onDateFromSelect={handleDateFromSelect}
-              onDateToSelect={handleDateToSelect}
-            />
-          </Box>
-          <Box gridColumn="span 12">
-            <Box gridColumn="span 12">
-              <Classement onSelectedPage={handlePageSelect} />
-            </Box>
-            {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 ? (
+      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+        <Box gridColumn="span 12">
+          <Component
+            onVerticalSelect={handleVerticalSelect}
+            onDateFromSelect={handleDateFromSelect}
+            onDateToSelect={handleDateToSelect}
+          />
+        </Box>
+        <Box gridColumn="span 12">
+          <Classement onSelectedPage={handlePageSelect} />
+          {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 && (
+            <>
               <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
                 <Charts
                   selectedVerticalId={selectedVerticalId}
@@ -118,10 +112,6 @@ function Dashboard() {
                   selectedPage={selectedPage}
                 />
               </Box>
-            ) : (
-              <></>
-            )}
-            {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 ? (
               <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
                 <Crea
                   selectedVerticalId={selectedVerticalId}
@@ -131,25 +121,23 @@ function Dashboard() {
                   onDetail={handleDetailSelect}
                 />
               </Box>
-            ) : (
-              <></>
-            )}
-            {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage && selectedDetail > 0 ? (
-              <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
-                <Information
-                selectedDetail={selectedDetail}
-                  selectedVerticalId={selectedVerticalId}
-                  selectedDateFrom={selectedDateFrom}
-                  selectedDateTo={selectedDateTo}
-                  selectedPage={selectedPage}
-                />
-              </Box>
-            ) : (
-              <></>
-            )}
-          </Box>
+              {selectedDetail > 0 && (
+                <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
+                  <Information
+                    selectedDetail={selectedDetail}
+                    selectedVerticalId={selectedVerticalId}
+                    selectedDateFrom={selectedDateFrom}
+                    selectedDateTo={selectedDateTo}
+                    selectedPage={selectedPage}
+                  />
+                </Box>
+              )}
+            </>
+          )}
         </Box>
+      </Box>
     </Box>
   );
 }
+
 export default Dashboard;

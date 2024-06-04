@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { BASE_URL, api_version } from '../../../authentication/config';
 import { Grid } from '@mui/material';
 
-// Generate an array with full hour range from 0 to 23
 const generateFullHourRange = () => {
   const hours = [];
   for (let i = 0; i <= 23; i++) {
@@ -23,7 +13,6 @@ const generateFullHourRange = () => {
   return hours;
 };
 
-// Format the data to match the structure needed by the chart
 const formatData = (data) => {
   const fullHours = generateFullHourRange();
   const formattedData = fullHours.map((hour) => {
@@ -36,7 +25,6 @@ const formatData = (data) => {
   return formattedData;
 };
 
-// Handle API errors
 const handleError = (error) => {
   Swal.fire({
     icon: 'info',
@@ -47,11 +35,8 @@ const handleError = (error) => {
   });
 };
 
-// Component for rendering the period chart
-const Periode = ({ selectedDetail }) => {
+const Periode = ({ selectedDetail, selectedDateFrom, setSelectedDateFrom }) => {
   const [chartData, setChartData] = useState([]);
-  const today = new Date().toISOString().substr(0, 10);
-  const [selectedDateFrom, setSelectedDateFrom] = useState(today);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,11 +69,11 @@ const Periode = ({ selectedDetail }) => {
     fetchData();
   }, [selectedDateFrom, selectedDetail]);
 
-  const handleDateFromChange = (dateFrom) => {
-    setSelectedDateFrom(dateFrom);
+  const handleDateFromChange = (e) => {
+    setSelectedDateFrom(e.target.value);
   };
 
-  return (
+  return selectedDetail ? (
     <>
       <Grid container spacing={3} mb={2}>
         <Grid item xs={3}>
@@ -96,25 +81,21 @@ const Periode = ({ selectedDetail }) => {
             type="date"
             className="form-control"
             value={selectedDateFrom}
-            onChange={(e) => handleDateFromChange(e.target.value)}
+            onChange={handleDateFromChange}
             max={new Date().toISOString().split('T')[0]}
           />
         </Grid>
       </Grid>
       <ResponsiveContainer width="100%" height={100}>
         <LineChart data={chartData}>
-          <XAxis
-            dataKey="hour"
-            domain={[0, 23]}
-            ticks={generateFullHourRange()}
-          />
+          <XAxis dataKey="hour" domain={[0, 23]} ticks={generateFullHourRange()} />
           <YAxis type="category" dataKey="status" />
           <Tooltip />
           <Line type="monotone" dataKey="status" stroke="#0F9D58" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </>
-  );
+  ) : null;
 };
 
 export default Periode;

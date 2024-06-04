@@ -70,7 +70,7 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
 
   // Premier graphique: Total des comptes en pourcentage pour "auto" et "manual"
   const totalChartData = {
-    labels: ['Auto', 'Manual'],
+    labels: ['Auto', 'Manuel'],
     datasets: [{
       data: [autoCount, manualCount],
       backgroundColor: ['#6DD5B3', '#9D81E2'],
@@ -134,7 +134,7 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
         </div>
       </div>
       <div className="chart-item">
-        <h2>Détails Manual</h2>
+        <h2>Détails Manuel</h2>
         <div className="doughnut-container">
           <Doughnut data={manualChartData} options={options} />
         </div>

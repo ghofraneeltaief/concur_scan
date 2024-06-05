@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { BASE_URL, api_version } from '../../../authentication/config';
 
-class Media extends React.Component {
+class Repartition extends React.Component {
   constructor(props) {
     super(props);
 
@@ -47,7 +48,9 @@ class Media extends React.Component {
           }
         }]
       },
+      showChart: true,
     };
+
   }
 
   componentDidMount() {
@@ -78,6 +81,15 @@ class Media extends React.Component {
         const response = await axios.get(apiUrl);
         const data = response.data;
 
+        if (response.status === 404 || !data || Object.values(data).every(val => val === 0)) {
+          this.setState({ showChart: false });
+          return;
+        }
+
+        if (response.status !== 200) {
+          throw new Error('Network response was not ok');
+        }
+
         // Extract labels and series from API response
         const labels = Object.keys(data);
         const series = Object.values(data).map(value => parseInt(value));
@@ -87,10 +99,12 @@ class Media extends React.Component {
           options: {
             ...this.state.options,
             labels: labels,
-          }
+          },
+          showChart: true,
         });
       } catch (error) {
         console.error("There was an error fetching the data!", error);
+        this.setState({ showChart: false });
       }
     }
   }
@@ -98,10 +112,14 @@ class Media extends React.Component {
   render() {
     return (
       <div>
-        <ReactApexChart options={this.state.options} series={this.state.series} type="donut" height={350} />
+        {this.state.showChart ? (
+          <ReactApexChart options={this.state.options} series={this.state.series} type="donut" height={350} />
+        ) : (
+          <div>Aucune Répartition Géolocalisation disponible</div>
+        )}
       </div>
     );
   }
 }
 
-export default Media;
+export default Repartition;

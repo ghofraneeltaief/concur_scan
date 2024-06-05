@@ -40,10 +40,9 @@ class Cible extends React.Component {
           offsetX: 40
         }
       },
+      showChart: true,
     };
 
-    // Bind the context of handleError to the component
-    this.handleError = this.handleError.bind(this);
   }
 
   componentDidMount() {
@@ -61,15 +60,6 @@ class Cible extends React.Component {
     }
   }
 
-  handleError(error) {
-    Swal.fire({
-      icon: 'info',
-      text: error,
-      width: '30%',
-      confirmButtonText: "Ok, j'ai compris!",
-      confirmButtonColor: '#0095E8',
-    });
-  }
 
   async fetchData() {
     const { selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage } = this.props;
@@ -85,7 +75,7 @@ class Cible extends React.Component {
         const data = response.data;
         
         if (response.status === 404) {
-          this.handleError('Aucune Cible fondée !');
+          this.setState({ showChart: false });
           return;
         }
 
@@ -93,7 +83,6 @@ class Cible extends React.Component {
           throw new Error('Network response was not ok');
         }
         
-        // Process the response data to fit the chart series
         const categories = [];
         const maleSeries = [];
         const femaleSeries = [];
@@ -115,11 +104,12 @@ class Cible extends React.Component {
               ...this.state.options.xaxis,
               categories: categories
             }
-          }
+          },
+          showChart: true,
         });
       } catch (error) {
         console.error("There was an error fetching the data!", error);
-        this.handleError('Aucune Cible fondée !');
+        this.setState({ showChart: false });
       }
     }
   }
@@ -127,7 +117,11 @@ class Cible extends React.Component {
   render() {
     return (
       <div>
-        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+        {this.state.showChart ? (
+          <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+        ) : (
+          <div>Aucune Cible fondée</div>
+        )}
       </div>
     );
   }

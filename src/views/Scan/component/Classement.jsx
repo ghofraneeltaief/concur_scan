@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
-import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import { BASE_URL, api_version } from '../../authentication/config';
-import Swal from 'sweetalert2';
-import logo from '../../../assets/images/logos/image.png';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import { Visibility } from '@mui/icons-material';
 import axios from 'axios';
 
-function Classement({ onSelectedPage }) {
+function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
   const [concurrentList, setConcurrentList] = useState([]);
   const [pageList, setPageList] = useState([]);
   const [selectedConcurrent, setSelectedConcurrent] = useState(null);
@@ -72,6 +68,7 @@ function Classement({ onSelectedPage }) {
       setSelectedConcurrent(concurrent);
     }
     setSelectedPage(null);
+    setSelectedDetail(null); // Reset selectedDetail when a concurrent is clicked
   };
 
   const handlePageClick = (page) => {
@@ -82,8 +79,9 @@ function Classement({ onSelectedPage }) {
   useEffect(() => {
     if (selectedPage === null) {
       onSelectedPage(null);
+      setSelectedDetail(null);
     }
-  }, [selectedPage, onSelectedPage]);
+  }, [selectedPage, onSelectedPage, setSelectedDetail]);
 
   const countPagesByCompetitor = () => {
     const pageCounts = {};

@@ -7,11 +7,14 @@ import Cible from './charts/Cible';
 import Tendance from './charts/Tendance';
 import Repartition from './charts/Repartition';
 function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage }) {
+  if (selectedVerticalId === null || selectedDateFrom === null || selectedDateTo === null || selectedPage === null) {
+    return <div>Données manquantes</div>;
+  }
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
         <Box gridColumn="span 8">
-          <DashboardCard title="Répartition placement" subtitle="Page 1">
+          <DashboardCard title="Répartition placement">
             <Placement selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
               selectedDateTo={selectedDateTo}
@@ -39,7 +42,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Cible" subtitle="Page 1" height="500px">
+          <DashboardCard title="Cible" height="500px">
             <Cible
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
@@ -49,7 +52,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Tendance Angle" subtitle="Page 1" height="500px">
+          <DashboardCard title="Tendance Angle" height="500px">
             <Tendance />
           </DashboardCard>
         </Box>

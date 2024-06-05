@@ -10,6 +10,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage, onDetail }) {
   const [ADS, setADS] = useState([]);
   const [error, setError] = useState(null);
+
   async function getToken() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -35,7 +36,8 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
           );
           if (!response.ok) {
             if (response.status === 404) {
-              handleError('Aucune ADS fondée !');
+              setADS([]);
+              return;
             }
             throw new Error('Network response was not ok');
           }
@@ -79,36 +81,30 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
     onDetail(id);
   };
 
-  const handleError = (error) => {
-    Swal.fire({
-      icon: 'info',
-      text: error,
-      width: '30%',
-      confirmButtonText: "Ok, j'ai compris!",
-      confirmButtonColor: '#0095E8',
-    });
-    setError(error);
-  };
   return (
     <Box sx={{ width: 1 }}>
-      <DashboardCard title="Classement Créa"  pb={4}>
-        <Carousel showThumbs={false} showIndicators={false}>
-          {ADSChunks.map((ad, adIndex) => (
-            <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} key={adIndex}>
-              {ad.map((row, index) => (
-                <Box gridColumn="span 3" key={index}>
-                  <DashboardCard title={row.page_name} height="400px">
-                    <Typography>{truncateText(row.ad_creative_bodies, 20, 100)}</Typography> {/* 20 words or 100 characters limit */}
-                    <Box mt={2} mb={2}>
-                      <Button variant="contained" onClick={() => handleViewDetail(row.ad_id)}>Voir détail</Button>
-                    </Box>
-                    <img src={row.image_preview}></img>
-                  </DashboardCard>
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </Carousel>
+      <DashboardCard title="Classement Créa" pb={4}>
+        {ADS.length === 0 ? (
+          <Typography>Aucune Classement Créa fondée !</Typography>
+        ) : (
+          <Carousel showThumbs={false} showIndicators={false}>
+            {ADSChunks.map((ad, adIndex) => (
+              <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2} key={adIndex}>
+                {ad.map((row, index) => (
+                  <Box gridColumn="span 3" key={index}>
+                    <DashboardCard title={row.page_name} height="400px">
+                      <Typography>{truncateText(row.ad_creative_bodies, 20, 100)}</Typography> {/* 20 words or 100 characters limit */}
+                      <Box mt={2} mb={2}>
+                        <Button variant="contained" onClick={() => handleViewDetail(row.ad_id)}>Voir détail</Button>
+                      </Box>
+                      <img src={row.image_preview} alt={row.page_name} />
+                    </DashboardCard>
+                  </Box>
+                ))}
+              </Box>
+            ))}
+          </Carousel>
+        )}
       </DashboardCard>
     </Box>
   );

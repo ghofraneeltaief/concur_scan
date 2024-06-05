@@ -45,8 +45,9 @@ class Media extends React.Component {
               position: 'bottom'
             }
           }
-        }]
-      },
+        }],
+        showChart: true,
+      }
     };
   }
 
@@ -55,12 +56,10 @@ class Media extends React.Component {
   }
   
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.selectedVerticalId !== this.props.selectedVerticalId ||
-      prevProps.selectedDateFrom !== this.props.selectedDateFrom ||
-      prevProps.selectedDateTo !== this.props.selectedDateTo ||
-      prevProps.selectedPage !== this.props.selectedPage
-    ) {
+    if (this.props.selectedVerticalId !== prevProps.selectedVerticalId ||
+        this.props.selectedDateFrom !== prevProps.selectedDateFrom ||
+        this.props.selectedDateTo !== prevProps.selectedDateTo ||
+        this.props.selectedPage !== prevProps.selectedPage) {
       this.fetchData();
     }
   }
@@ -68,37 +67,46 @@ class Media extends React.Component {
   async fetchData() {
     const { selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage } = this.props;
 
-    if (selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage) {
-      const token = localStorage.getItem('token');
-      const responseObject = JSON.parse(token);
-      const accessToken = responseObject.access_token;
-      const apiUrl = `${BASE_URL}/${api_version}/reports/ads_stats_by_medias_type?hp_cs_authorization=${accessToken}&date_begin=${selectedDateFrom}&date_end=${selectedDateTo}&vertical_id=${selectedVerticalId}&page_id=${selectedPage}`;
+    if (!selectedVerticalId || !selectedDateFrom || !selectedDateTo || !selectedPage) {
+      return;
+    }
 
-      try {
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+    const token = localStorage.getItem('token');
+    const responseObject = JSON.parse(token);
+    const accessToken = responseObject.access_token;
+    const apiUrl = `${BASE_URL}/${api_version}/reports/ads_stats_by_medias_type?hp_cs_authorization=${accessToken}&date_begin=${selectedDateFrom}&date_end=${selectedDateTo}&vertical_id=${selectedVerticalId}&page_id=${selectedPage}`;
 
-        // Extract labels and series from API response
-        const labels = Object.keys(data);
-        const series = Object.values(data);
+    try {
+      const response = await axios.get(apiUrl);
+      const data = response.data;
 
-        this.setState({
-          series: series,
-          options: {
-            ...this.state.options,
-            labels: labels,
-          }
-        });
-      } catch (error) {
-        console.error("There was an error fetching the data!", error);
+      if (response.status === 404 || !data || data.length === 0 || Object.values(data).every(value => value === 0)) {
+        this.setState({ showChart: false });
+        return;
       }
+
+      this.setState({
+        series: Object.values(data),
+        options: {
+          ...this.state.options,
+          labels: Object.keys(data),
+        },
+        showChart: true,
+      });
+    } catch (error) {
+      console.error("Error fetching media data:", error);
+      this.setState({ showChart: false });
     }
   }
 
   render() {
     return (
       <div>
-        <ReactApexChart options={this.state.options} series={this.state.series} type="donut" height={350} />
+        {this.state.showChart ? (
+          <ReactApexChart options={this.state.options} series={this.state.series} type="donut" height={350} />
+        ) : (
+          <div>No media available</div>
+        )}
       </div>
     );
   }

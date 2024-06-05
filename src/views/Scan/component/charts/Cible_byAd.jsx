@@ -39,6 +39,7 @@ class Cible_byAd extends React.Component {
           offsetX: 40
         }
       },
+      dataAvailable: true // Flag to track if data is available or not
     };
   }
 
@@ -57,7 +58,7 @@ class Cible_byAd extends React.Component {
   async fetchData() {
     const { selectedDetail } = this.props;
 
-    if ( selectedDetail) {
+    if (selectedDetail) {
       const token = localStorage.getItem('token');
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
@@ -67,17 +68,15 @@ class Cible_byAd extends React.Component {
         const response = await axios.get(apiUrl);
         const data = response.data;
 
-        // Assuming data is an array of objects as given:
-        // [
-        //   { "male": "44879", "female": "29879", "unknown": "1156", "fk_fb_ad_range_id": "1", "fb_ad_range_label": "18-24" },
-        //   ...
-        // ]
-        
+        if (data.length === 0) { // Check if data is empty
+          this.setState({ dataAvailable: false }); // Set flag to false if data is empty
+          return;
+        }
+
         // Process the response data to fit the chart series
         const categories = [];
         const maleSeries = [];
         const femaleSeries = [];
-        const unknownSeries = [];
 
         data.forEach(item => {
           categories.push(item.fb_ad_range_label);
@@ -96,7 +95,8 @@ class Cible_byAd extends React.Component {
               ...this.state.options.xaxis,
               categories: categories
             }
-          }
+          },
+          dataAvailable: true // Set flag to true if data is available
         });
       } catch (error) {
         console.error("There was an error fetching the data!", error);
@@ -105,9 +105,15 @@ class Cible_byAd extends React.Component {
   }
 
   render() {
+    const { dataAvailable } = this.state;
+
     return (
       <div>
-        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={320} />
+        {dataAvailable ? (
+          <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={320} />
+        ) : (
+          <div>Aucune cible disponible</div>
+        )}
       </div>
     );
   }

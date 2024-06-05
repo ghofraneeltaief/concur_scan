@@ -65,7 +65,7 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
   }, [selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage]);
 
   if (manualDetails.length === 0) {
-    return <div>Loading...</div>; // Show a loading state while data is being fetched
+    return <div>Répartition placement est vide</div>
   }
 
   // Premier graphique: Total des comptes en pourcentage pour "auto" et "manual"

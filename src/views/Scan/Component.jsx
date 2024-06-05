@@ -117,7 +117,7 @@ function Component({
           <Typography variant="h6" sx={{ fontWeight: '400' }}>
             Période
           </Typography>
-          <Grid container>
+          <Grid container spacing={3}>
             <Grid item xs={6}>
               <input
                 type="date"

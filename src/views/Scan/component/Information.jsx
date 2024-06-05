@@ -74,6 +74,12 @@ function Information({
     }
   }, [selectedDetail, selectedPage]);
   console.log(selectedDetail, selectedPage);
+
+  useEffect(() => {
+    if (selectedPage !== null) {
+      setAdDetail(null);
+    }
+  }, [selectedPage]);
   return (
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Information Créa">
@@ -83,7 +89,7 @@ function Information({
               <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom} />
             </DashboardCard>
           </Box>
-          <Box gridColumn="span 7">
+          <Box gridColumn="span 8">
             {adDetail && (
               <DashboardCard mb="2" height="745px">
                 <Box display="flex" justifyContent="end">
@@ -124,7 +130,7 @@ function Information({
               </DashboardCard>
             )}
           </Box>
-          <Box gridColumn="span 9">
+          <Box gridColumn="span 8">
             {selectedDetail && (
               <>
                 <Box gridColumn="span 8">

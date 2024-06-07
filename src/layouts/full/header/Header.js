@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton } from '@mui/material';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
 // components
@@ -28,7 +28,7 @@ const Header = (props) => {
 
   return (
     <AppBarStyled position="sticky" color="default">
-      <ToolbarStyled>
+      <ToolbarStyled><Typography variant='h5' >Plateforme Veille Concurrentielle</Typography>
         <IconButton
           color="inherit"
           aria-label="menu"
@@ -43,6 +43,7 @@ const Header = (props) => {
           <IconMenu width="20" height="20" />
         </IconButton>
         <Box flexGrow={1} />
+        
         <Stack spacing={1} direction="row" alignItems="center">
           <Profile />
         </Stack>

@@ -128,7 +128,7 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
   return (
     <div className="chart-container">
       <div className="chart-item">
-        <h2>Totale Count</h2>
+        <h2>Total Count</h2>
         <div className="doughnut-container">
           <Doughnut data={totalChartData} options={options} />
         </div>

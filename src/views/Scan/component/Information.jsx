@@ -95,11 +95,11 @@ function Information({
                 <Box display="flex" justifyContent="end">
                   <IconButton onClick={() => handleCopy(adDetail.ad_creative_link_titles)}>
                     <ContentCopyIcon />
-                    <Typography sx={{ paddingLeft: '7px' }}>Copie titre</Typography>
+                    <Typography sx={{ paddingLeft: '7px' }}>Copier titre</Typography>
                   </IconButton>
                   <IconButton onClick={() => handleCopy(adDetail.ad_creative_bodies)}>
                     <ContentCopyIcon />
-                    <Typography sx={{ paddingLeft: '7px' }}>Copie paragraphe</Typography>
+                    <Typography sx={{ paddingLeft: '7px' }}>Copier paragraphe</Typography>
                   </IconButton>
                 </Box>
                 <Typography variant="h6" component="div">

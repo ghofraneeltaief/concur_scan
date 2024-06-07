@@ -114,7 +114,7 @@ function Component({
           />
         </Grid>
         <Grid item xs={3.6}>
-          <Typography variant="h6" sx={{ fontWeight: '400' }}>
+          <Typography variant="h6" sx={{ fontWeight: '600' }}>
             Période
           </Typography>
           <Grid container spacing={3}>

@@ -83,6 +83,7 @@ function Angles() {
         Swal.fire({
           icon: 'error',
           text: 'Votre session a expiré. Veuillez vous reconnecter.',
+          confirmButtonColor: "#d33",
         }).then(() => {
           // Redirect to login or clear token
         });
@@ -111,6 +112,7 @@ function Angles() {
           Swal.fire({
             icon: 'error',
             text: 'Votre session a expiré. Veuillez vous reconnecter.',
+            confirmButtonColor: "#d33",
           }).then(() => {
             // Redirect to login or clear token
           });
@@ -150,16 +152,18 @@ function Angles() {
         setAssignedKeywords((prevKeywords) => [...prevKeywords, keyword]);
         Swal.fire({
           icon: 'success',
-          text: `Angel "${keyword.keyword_label}" ajouté avec success!`,
+          text: `Angel "${keyword.keyword_label}" ajouté avec succés!`,
+          confirmButtonColor: "	#008000",
         });
       } else {
         throw new Error('Impossible d`ajouter l`angle à la verticale.');
       }
     } catch (error) {
-      console.error('Erreur d`ajout l`angle à la verticale:', error);
+      console.error('L`angle est déjà existe');
       Swal.fire({
         icon: 'error',
-        text: `Erreur d'ajout l'angle: ${error.message}`,
+        text: 'L`angle est déjà existe',
+        confirmButtonColor: "#d33",
       });
     }
   };
@@ -184,7 +188,8 @@ function Angles() {
         setAssignedKeywords(assignedKeywords.filter((kw) => kw.keyword_id !== keyword.keyword_id));
         Swal.fire({
           icon: 'success',
-          text: `Angel "${keyword.keyword_label}" supprimé avec success`,
+          text: `Angel "${keyword.keyword_label}" supprimé avec succés`,
+          confirmButtonColor: "	#008000",
         });
       } else {
         throw new Error('Impossible de supprimer l`angle de la verticale.');
@@ -194,6 +199,7 @@ function Angles() {
       Swal.fire({
         icon: 'error',
         text: `Erreur de suppression l'angle de la verticale: ${error.message}`,
+        confirmButtonColor: "#d33",
       });
     }
   };
@@ -225,6 +231,7 @@ function Angles() {
             Swal.fire({
               icon: 'success',
               text: `Keyword "${newKeyword.trim()}" ajouté avec succès!`,
+              confirmButtonColor: "	#008000",
             });
           } else {
             throw new Error('Réponse inattendue du serveur.');
@@ -237,6 +244,7 @@ function Angles() {
         Swal.fire({
           icon: 'error',
           text: `Erreur lors de l'ajout du nouveau angle: ${error.message}`,
+          confirmButtonColor: "#d33",
         });
       }
     }
@@ -263,16 +271,18 @@ function Angles() {
           throw new Error(`Failed to add keyword to vertical ${vertical.vertical_id}`);
         }
       }
-
+      fetchAssignedKeywords();
       Swal.fire({
         icon: 'success',
-        text: `Angle "${keyword.keyword_label}" ajouté à tous les verticales avec succès!`,
+        text: `Angle "${keyword.keyword_label}" ajouté à tous les verticales avec succès !`,
+        confirmButtonColor: "	#008000",
       });
     } catch (error) {
       console.error('Erreur d`ajout l`angle à toutes les verticales:', error);
       Swal.fire({
         icon: 'error',
         text: `Erreur d'ajout l'angle à toutes les verticales: ${error.message}`,
+        confirmButtonColor: "#d33",
       });
     }
   };
@@ -290,7 +300,7 @@ function Angles() {
       headerName: 'Add',
       width: 100,
       renderCell: (params) => (
-        <IconButton color="primary" onClick={() => handleAddKeywordToVertical(params.row)}>
+        <IconButton color="success" onClick={() => handleAddKeywordToVertical(params.row)}>
           <AddIcon />
         </IconButton>
       ),
@@ -303,7 +313,7 @@ function Angles() {
         <Button
           onClick={() => handleAddKeywordToAllVerticals(params.row)}
           variant="contained"
-          color="primary"
+          color="success"
         >
           Add to all
         </Button>
@@ -333,9 +343,9 @@ function Angles() {
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
         <Box gridColumn="span 7">
-          <DashboardCard title="Gestion Angles">
+          <DashboardCard title="Gestion des Angles">
             <Box mb={2} display={'flex'} justifyContent="end">
-              <Button variant="contained" onClick={() => setOpen(true)}>
+              <Button color="success" variant="contained" onClick={() => setOpen(true)}>
                 <FaPlus />
                 <Typography sx={{ paddingLeft: '7px' }}>Ajouter</Typography>
               </Button>
@@ -348,11 +358,11 @@ function Angles() {
             >
               <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2" mb={5}>
-                  Ajouter Angles
+                  Ajouter Angle
                 </Typography>
                 <TextField
                   id="outlined-basic"
-                  label="Keyword"
+                  label="Angle"
                   variant="outlined"
                   fullWidth
                   value={newKeyword}
@@ -367,7 +377,7 @@ function Angles() {
                   >
                     <Typography>Annuler</Typography>
                   </Button>
-                  <Button variant="contained" onClick={handleAddNewKeyword}>
+                  <Button color="success" variant="contained" onClick={handleAddNewKeyword}>
                     <Typography>Ajouter</Typography>
                   </Button>
                 </Box>

@@ -112,7 +112,7 @@ function Login() {
         <img alt="Logo" className="logo-2" src={logo_2} />
         {/* end::Logo */}
         {/* begin::Title */}
-        <h1 className="titre-2">The lead generation 🧢</h1>
+        <h1 className="titre-2">Plateforme Veille Concurrentielle 🧢</h1>
         {/* end::Title */}
       </Grid>
     </Grid>

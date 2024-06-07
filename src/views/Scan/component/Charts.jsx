@@ -14,7 +14,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
         <Box gridColumn="span 8">
-          <DashboardCard title="Répartition placement">
+          <DashboardCard title="Répartition de placement">
             <Placement selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
               selectedDateTo={selectedDateTo}
@@ -22,7 +22,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Répartition média" height="470px">
+          <DashboardCard title="Répartition de média" height="470px">
             <Media
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
@@ -32,7 +32,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Répartition Géolocalisation" height="500px">
+          <DashboardCard title="Répartition de géolocalisation" height="500px">
             <Repartition
               selectedVerticalId={selectedVerticalId}
               selectedDateFrom={selectedDateFrom}
@@ -52,7 +52,7 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
           </DashboardCard>
         </Box>
         <Box gridColumn="span 4">
-          <DashboardCard title="Tendance Angle" height="500px">
+          <DashboardCard title="Tendance d'angle" height="500px">
             <Tendance />
           </DashboardCard>
         </Box>

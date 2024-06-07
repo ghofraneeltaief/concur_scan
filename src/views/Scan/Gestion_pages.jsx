@@ -372,14 +372,17 @@ function Pages() {
   /* End: Style select */
   return (
     <Box sx={{ width: 1 }}>
-      <DashboardCard title="Gestion Pages">
+      <DashboardCard title="Gestion des Pages">
         <Box mb={2} display={'flex'} justifyContent="end">
-          <Button variant="contained" onClick={handleOpen}>
+          <Button color='success' variant="contained" onClick={handleOpen}>
             <FaPlus />
             <Typography sx={{ paddingLeft: '7px' }}>Ajouter</Typography>
           </Button>
         </Box>
         <DataGrid
+        slots={{
+          toolbar: GridToolbar,
+        }}
           autoHeight
           rows={rows}
           columns={columns}

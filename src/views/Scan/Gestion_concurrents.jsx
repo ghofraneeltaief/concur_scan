@@ -217,9 +217,9 @@ const Concurrent = () => {
 
   return (
     <Box sx={{ width: 1 }}>
-      <DashboardCard title="Gestion Concurrents">
+      <DashboardCard title="Gestion des Concurrents">
         <Box mb={2} display={'flex'} justifyContent="end">
-          <Button variant="contained" onClick={handleAddRow}>
+          <Button color='success' variant="contained" onClick={handleAddRow}>
             <FaPlus />
             <Typography sx={{ paddingLeft: '7px' }}>Ajouter</Typography>
           </Button>

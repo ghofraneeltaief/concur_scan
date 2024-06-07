@@ -105,7 +105,7 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
         <Box gridColumn="span 6">
-          <DashboardCard title="Classement concurrent" subtitle="par nombre d’ouverture" height="500px">
+          <DashboardCard title="Classement des concurrents" subtitle="par nombre d’ouverture" height="500px">
             <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowY: 'auto' }}>
               <Table stickyHeader>
                 <TableHead>
@@ -146,7 +146,7 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
           </DashboardCard>
         </Box>
         <Box gridColumn="span 6">
-          <DashboardCard title="Classement page" subtitle="pour le concurrent sélectionné" height="500px">
+          <DashboardCard title="Classement des pages" subtitle="pour le concurrent sélectionné" height="500px">
             <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowY: 'auto' }}>
               <Table stickyHeader>
                 <TableHead>

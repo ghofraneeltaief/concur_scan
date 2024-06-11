@@ -16,6 +16,8 @@ function Information({
 }) {
   const [ADS, setADS] = useState([]);
   const [adDetail, setAdDetail] = useState(null);
+  const [resetPeriode, setResetPeriode] = useState(false);
+  const [resetCible, setResetCible] = useState(false);
 
   async function getToken() {
     const token = localStorage.getItem('token');
@@ -73,20 +75,40 @@ function Information({
       setAdDetail(null);
     }
   }, [selectedDetail, selectedPage]);
-  console.log(selectedDetail, selectedPage);
-
+  
   useEffect(() => {
     if (selectedPage !== null) {
       setAdDetail(null);
+      setResetPeriode(true);
+      setResetCible(true);
     }
   }, [selectedPage]);
+
+  useEffect(() => {
+    if (resetPeriode) {
+      setResetPeriode(false);
+    }
+  }, [resetPeriode]);
+
+  useEffect(() => {
+    if (resetCible) {
+      setResetCible(false);
+    }
+  }, [resetCible]);
+
+  const geolocationTypeText = (type) => {
+    if (type === "0") return 'Géolocalisation';
+    if (type === "1") return 'Carpet bombing';
+    return '';
+  };
+
   return (
     <Box sx={{ width: 1 }}>
       <DashboardCard title="Information Créa">
         <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
           <Box gridColumn="span 16" mb={2}>
             <DashboardCard title="Période activation" height="300px">
-              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom} />
+              <Periode selectedDetail={selectedDetail} selectedDateFrom={selectedDateFrom} reset={resetPeriode} />
             </DashboardCard>
           </Box>
           <Box gridColumn="span 8">
@@ -115,8 +137,14 @@ function Information({
                   </Typography>
                 </Typography>
                 <Typography variant="h6" component="div" mt={2}>
+                  Type géolocalisation: {' '}
+                  <Typography variant="body1" component="span">
+                    {geolocationTypeText(adDetail.geolocation_type)}
+                  </Typography>
+                </Typography>
+                <Typography variant="h6" component="div" mt={2}>
                   Page de redirection:
-                  <a style={{ wordBreak: 'break-all', display: 'block' }} href={adDetail.url}>
+                  <a style={{ wordBreak: 'break-all', display: 'block' }} target='_blank' href={adDetail.url}>
                     {adDetail.url}
                   </a>
                 </Typography>
@@ -135,7 +163,7 @@ function Information({
               <>
                 <Box gridColumn="span 8">
                   <DashboardCard title="Cible">
-                    <Cible_byAd selectedDetail={selectedDetail} />
+                    <Cible_byAd selectedDetail={selectedDetail} reset={resetCible} />
                   </DashboardCard>
                 </Box>
               </>

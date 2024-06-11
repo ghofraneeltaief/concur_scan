@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography, Button } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import Select from 'react-select';
 import './selection.css';
 import { BASE_URL, api_version } from '../authentication/config';
-import { FaFileExport } from 'react-icons/fa';
-import { ImLoop2 } from 'react-icons/im';
 
 function Component({
   onVerticalSelect,
-  onVerticalSelectName,
   onDateFromSelect,
   onDateToSelect,
-  onRecalculateClick,
 }) {
   const [selectedOptions, setSelectedOptions] = useState(null);
-  const today = new Date().toISOString().substr(0, 10);
-  async function getToken() {
+  const [verticals, setVerticals] = useState([]);
+  const [selectedVertical, setSelectedVertical] = useState([]);
+  const [selectedDateFrom, setSelectedDateFrom] = useState(new Date().toISOString().substr(0, 10));
+  const [selectedDateTo, setSelectedDateTo] = useState(new Date().toISOString().substr(0, 10));
+
+  const getToken = async () => {
     const token = localStorage.getItem('token');
     if (token) {
       return token;
     } else {
       throw new Error('No token available');
     }
-  }
+  };
+
   const fetchVerticals = async () => {
     try {
       const token = await getToken();
@@ -40,41 +41,38 @@ function Component({
     } catch (error) {
       console.error(error);
     }
-    onDateFromSelect(today);
-    onDateToSelect(today);
   };
+
   useEffect(() => {
     fetchVerticals();
-  }, [onDateFromSelect, onDateToSelect]);
-
-  const [verticals, setVerticals] = useState([]);
-  const [selectedVertical, setSelectedVertical] = useState([]);
-  const [selectedDateFrom, setSelectedDateFrom] = useState(today);
-  const [selectedDateTo, setSelectedDateTo] = useState(today);
+    onDateFromSelect(selectedDateFrom);
+    onDateToSelect(selectedDateTo);
+  }, []);
 
   const handleVerticalSelect = (selectedOption) => {
-    setSelectedVertical(selectedOption); // Mettre à jour l'état avec la nouvelle option sélectionnée
-    onVerticalSelect(selectedOption.value); // Appeler la fonction de rappel avec l'ID de la verticale
+    setSelectedVertical(selectedOption); // Update state with the new selected option
+    onVerticalSelect(selectedOption.value); // Call the callback function with the vertical ID
   };
 
   const handleDateFromChange = (dateFrom) => {
     setSelectedDateFrom(dateFrom);
-    onDateFromSelect(dateFrom);
+    onDateFromSelect(dateFrom); // Call the callback function with the selected date from
   };
 
   const handleDateToChange = (dateTo) => {
     setSelectedDateTo(dateTo);
-    onDateToSelect(dateTo);
+    onDateToSelect(dateTo); // Call the callback function with the selected date to
   };
 
-  // Calculer la date maximale autorisée (30 jours à partir de la date actuelle)
+  // Calculate the maximum allowed date (30 days from the current date)
   const currentDate = new Date();
   const minDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() - 1,
-    currentDate.getDate(),
+    currentDate.getDate()
   );
-  /* Begin: Style select */
+
+  // Begin: Style select
   const ITEM_HEIGHT = 30;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -85,7 +83,8 @@ function Component({
       },
     },
   };
-  /* End: Style select */
+  // End: Style select
+
   return (
     <>
       <Typography variant="h6" mb={3}>

@@ -7,9 +7,7 @@ import Cible from './charts/Cible';
 import Tendance from './charts/Tendance';
 import Repartition from './charts/Repartition';
 function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPage }) {
-  if (selectedVerticalId === null || selectedDateFrom === null || selectedDateTo === null || selectedPage === null) {
-    return <div>Données manquantes</div>;
-  }
+ console.log(selectedDateFrom, selectedDateTo);
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>

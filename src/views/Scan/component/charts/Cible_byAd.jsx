@@ -49,9 +49,23 @@ class Cible_byAd extends React.Component {
   
   componentDidUpdate(prevProps) {
     if (
-      prevProps.selectedDetail !== this.props.selectedDetail
+      prevProps.selectedDetail !== this.props.selectedDetail ||
+      prevProps.reset !== this.props.reset
     ) {
-      this.fetchData();
+      if (this.props.reset) {
+        this.setState({
+          series: [],
+          options: {
+            ...this.state.options,
+            xaxis: {
+              categories: []
+            }
+          },
+          dataAvailable: true
+        });
+      } else {
+        this.fetchData();
+      }
     }
   }
 

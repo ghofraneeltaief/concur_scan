@@ -61,6 +61,10 @@ function Crea({ selectedVerticalId, selectedDateFrom, selectedDateTo, selectedPa
   };
 
   const truncateText = (text, wordLimit, charLimit) => {
+    if (!text) {
+      return '';
+    }
+
     const words = text.split(' ');
     let truncatedText = '';
     let charCount = 0;

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Component from './Component';
 import Classement from './component/Classement';
 import Charts from './component/Charts';
 import Crea from './component/Crea';
 import Information from './component/Information';
-import DashboardCard from 'src/components/shared/DashboardCard';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -20,6 +19,7 @@ function Dashboard() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   const platforms = [
     { icon: facebook, label: 'Facebook', value: '1' },
     { icon: google, label: 'Google', value: '2' },
@@ -58,6 +58,11 @@ function Dashboard() {
   const handleDetailSelect = (detail) => {
     setSelectedDetail(detail);
   };
+
+  // Reset selectedDetail when selectedPage changes
+  useEffect(() => {
+    setSelectedDetail(null);
+  }, [selectedPage]);
 
   return (
     <Box sx={{ width: 1 }}>
@@ -101,7 +106,7 @@ function Dashboard() {
           />
         </Box>
         <Box gridColumn="span 12">
-          <Classement onSelectedPage={handlePageSelect} selectedDetail={selectedDetail} setSelectedDetail={setSelectedDetail}/>
+          <Classement onSelectedPage={handlePageSelect} selectedDetail={selectedDetail} setSelectedDetail={setSelectedDetail} />
           {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 && (
             <>
               <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
@@ -121,7 +126,7 @@ function Dashboard() {
                   onDetail={handleDetailSelect}
                 />
               </Box>
-              {selectedDetail > 0 && (
+              {selectedDetail && (
                 <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>
                   <Information
                     selectedDetail={selectedDetail}

@@ -115,7 +115,7 @@ class Repartition extends React.Component {
         {this.state.showChart ? (
           <ReactApexChart options={this.state.options} series={this.state.series} type="donut" height={350} />
         ) : (
-          <div>Aucune Répartition Géolocalisation disponible</div>
+          <div>Aucune Répartition Géolocalisation fondée</div>
         )}
       </div>
     );

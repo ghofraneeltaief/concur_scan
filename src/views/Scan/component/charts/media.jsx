@@ -105,7 +105,7 @@ class Media extends React.Component {
         {this.state.showChart ? (
           <ReactApexChart options={this.state.options} series={this.state.series} type="donut" height={350} />
         ) : (
-          <div>No media available</div>
+          <div>Aucune Média fondée</div>
         )}
       </div>
     );

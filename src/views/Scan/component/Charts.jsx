@@ -51,7 +51,10 @@ function Charts({ selectedVerticalId, selectedDateFrom, selectedDateTo, selected
         </Box>
         <Box gridColumn="span 4">
           <DashboardCard title="Tendance d'angle" height="500px">
-            <Tendance />
+            <Tendance selectedVerticalId={selectedVerticalId}
+              selectedDateFrom={selectedDateFrom}
+              selectedDateTo={selectedDateTo}
+              selectedPage={selectedPage}/>
           </DashboardCard>
         </Box>
       </Box>

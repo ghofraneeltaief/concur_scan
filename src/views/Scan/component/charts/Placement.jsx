@@ -110,7 +110,7 @@ const Placement = ({ selectedVerticalId, selectedDateFrom, selectedDateTo, selec
   };
 
   if (autoCount === 0 && manualCount === 0) {
-    return <div>Répartition placement est vide</div>;
+    return <div>Aucune Répartition placement fondée</div>;
   }
 
   if (manualDetails.length === 0) {

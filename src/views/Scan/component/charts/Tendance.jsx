@@ -99,7 +99,7 @@ class Tendance extends React.Component {
       const categories = data.map(item => item.keyword_label || 'N/A');
 
       this.setState({
-        series: [{ data: seriesData }],
+        series: [{ name: 'ads', data: seriesData }],
         options: {
           ...this.state.options,
           xaxis: {

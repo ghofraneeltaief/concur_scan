@@ -4,14 +4,10 @@ import Select from 'react-select';
 import './selection.css';
 import { BASE_URL, api_version } from '../authentication/config';
 
-function Component({
-  onVerticalSelect,
-  onDateFromSelect,
-  onDateToSelect,
-}) {
+function Component({ onVerticalSelect, onDateFromSelect, onDateToSelect }) {
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [verticals, setVerticals] = useState([]);
-  const [selectedVertical, setSelectedVertical] = useState([]);
+  const [selectedVertical, setSelectedVertical] = useState(null);
   const [selectedDateFrom, setSelectedDateFrom] = useState(new Date().toISOString().substr(0, 10));
   const [selectedDateTo, setSelectedDateTo] = useState(new Date().toISOString().substr(0, 10));
 
@@ -32,10 +28,7 @@ function Component({
       const requestOptions = {
         method: 'GET',
       };
-      const response = await fetch(
-        `${BASE_URL}/${api_version}/verticals?hp_cs_authorization=${accessToken}`,
-        requestOptions,
-      );
+      const response = await fetch(`${BASE_URL}/${api_version}/verticals?hp_cs_authorization=${accessToken}`, requestOptions);
       const data = await response.json();
       setVerticals(data);
     } catch (error) {
@@ -66,11 +59,7 @@ function Component({
 
   // Calculate the maximum allowed date (30 days from the current date)
   const currentDate = new Date();
-  const minDate = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() - 1,
-    currentDate.getDate()
-  );
+  const minDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
 
   // Begin: Style select
   const ITEM_HEIGHT = 30;

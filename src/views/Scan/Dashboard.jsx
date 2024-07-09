@@ -106,7 +106,7 @@ function Dashboard() {
           />
         </Box>
         <Box gridColumn="span 12">
-          <Classement onSelectedPage={handlePageSelect} selectedDetail={selectedDetail} setSelectedDetail={setSelectedDetail} />
+          <Classement selectedVerticalId={selectedVerticalId} onSelectedPage={handlePageSelect} selectedDetail={selectedDetail} setSelectedDetail={setSelectedDetail} />
           {selectedVerticalId && selectedDateFrom && selectedDateTo && selectedPage > 0 && (
             <>
               <Box gridColumn="span 12" sx={{ paddingTop: '40px' }}>

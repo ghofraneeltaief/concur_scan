@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import { Visibility } from '@mui/icons-material';
 import axios from 'axios';
 
-function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
+function Classement({ onSelectedPage, selectedDetail, setSelectedDetail, selectedVerticalId }) {
   const [concurrentList, setConcurrentList] = useState([]);
   const [pageList, setPageList] = useState([]);
   const [selectedConcurrent, setSelectedConcurrent] = useState(null);
@@ -52,6 +52,7 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
           coverage: page.coverage,
           nbr_ads: page.nbr_ads,
           couver: page.couver,
+          fk_vertical_id: page.fk_vertical_id,
         }));
         setPageList(pages);
       } catch (error) {
@@ -86,6 +87,7 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
   const countPagesByCompetitor = () => {
     const pageCounts = {};
     pageList.forEach((page) => {
+      if (selectedVerticalId && page.fk_vertical_id !== selectedVerticalId) return;
       const competitorId = page.fk_competitor_id;
       if (pageCounts[competitorId]) {
         pageCounts[competitorId]++;
@@ -96,17 +98,22 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
     return pageCounts;
   };
 
+  const filterPagesByVerticalIdAndCompetitor = (pages, verticalId, competitorId) => {
+    return pages.filter((page) =>
+      (!verticalId || page.fk_vertical_id === verticalId) &&
+      (!competitorId || page.fk_competitor_id === competitorId)
+    );
+  };
+
   const pagesByCompetitor = countPagesByCompetitor();
-  const filteredPageList = selectedConcurrent
-    ? pageList.filter((page) => page.fk_competitor_id === selectedConcurrent.competitor_id)
-    : pageList;
+  const filteredPageList = filterPagesByVerticalIdAndCompetitor(pageList, selectedVerticalId, selectedConcurrent?.competitor_id);
 
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(16, 1fr)" gap={2}>
         <Box gridColumn="span 6">
           <DashboardCard title="Classement des concurrents" subtitle="par nombre d’ouverture" height="500px">
-            <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowY: 'auto' }}>
+            <TableContainer component={Paper} sx={{ boxShadow: 'none', maxHeight: '400px', overflowY: 'auto' }}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#F7F9FC' }}>
@@ -147,7 +154,7 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
         </Box>
         <Box gridColumn="span 6">
           <DashboardCard title="Classement des pages" subtitle="pour le concurrent sélectionné" height="500px">
-            <TableContainer component={Paper} sx={{ boxShadow: 'none', overflowY: 'auto' }}>
+            <TableContainer component={Paper} sx={{ boxShadow: 'none', maxHeight: '400px', overflowY: 'auto' }}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#F7F9FC' }}>
@@ -157,30 +164,38 @@ function Classement({ onSelectedPage, selectedDetail, setSelectedDetail }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredPageList.map((row, index) => (
-                    <TableRow
-                      key={index}
-                      onClick={() => handlePageClick(row)}
-                      sx={{
-                        cursor: 'pointer',
-                        backgroundColor: selectedPage?.page_id === row.page_id ? '#E0F7FA' : 'inherit',
-                        '&:hover': { backgroundColor: '#F1F1F1' },
-                      }}
-                    >
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <IconButton sx={{ padding: '4px', marginRight: '8px' }}>
-                            <Visibility sx={{ fontSize: '16px', color: '#0095E8' }} />
-                          </IconButton>
-                          <Typography color={selectedPage?.page_id === row.page_id ? '#0095E8' : 'inherit'}>
-                            {row.page_name}
-                          </Typography>
-                        </Box>
+                  {filteredPageList.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={3} align="center">
+                        Aucune page trouvée pour cette verticale.
                       </TableCell>
-                      <TableCell>{row.nbr_ads}</TableCell>
-                      <TableCell>{row.couver}</TableCell>
                     </TableRow>
-                  ))}
+                  ) : (
+                    filteredPageList.map((row, index) => (
+                      <TableRow
+                        key={index}
+                        onClick={() => handlePageClick(row)}
+                        sx={{
+                          cursor: 'pointer',
+                          backgroundColor: selectedPage?.page_id === row.page_id ? '#E0F7FA' : 'inherit',
+                          '&:hover': { backgroundColor: '#F1F1F1' },
+                        }}
+                      >
+                        <TableCell>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <IconButton sx={{ padding: '4px', marginRight: '8px' }}>
+                              <Visibility sx={{ fontSize: '16px', color: '#0095E8' }} />
+                            </IconButton>
+                            <Typography color={selectedPage?.page_id === row.page_id ? '#0095E8' : 'inherit'}>
+                              {row.page_name}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>{row.nbr_ads}</TableCell>
+                        <TableCell>{row.couver}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

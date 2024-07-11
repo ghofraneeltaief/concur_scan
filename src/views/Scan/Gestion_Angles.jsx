@@ -21,7 +21,7 @@ import DashboardCard from 'src/components/shared/DashboardCard';
 import { FaPlus } from 'react-icons/fa';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import Gestionkeywords from './gestion_keywords';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -462,6 +462,9 @@ function Angles() {
               </Box>
             )}
           </DashboardCard>
+        </Box>
+        <Box gridColumn="span 7">
+<Gestionkeywords />
         </Box>
       </Box>
     </Box>

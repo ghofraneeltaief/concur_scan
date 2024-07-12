@@ -6,12 +6,6 @@ import {
   Modal,
   TextField,
   IconButton,
-  TableContainer,
-  TableHead,
-  TableBody,
-  Table,
-  TableRow,
-  TableCell,
 } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Select from 'react-select';
@@ -45,7 +39,7 @@ function Keywords() {
   const [selectedKeywords, setSelectedKeywords] = useState([]);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [currentKeyword, setCurrentKeyword] = useState({ keyword_id: '', label: '', angle_id: '' });
-
+console.log(currentKeyword)
 
   async function getToken() {
     const token = localStorage.getItem('token');
@@ -180,17 +174,16 @@ function Keywords() {
   useEffect(() => {
     fetchAssignedKeywords();
   }, [selectedVertical]);
-
+  
   const handleOpenUpdateModal = (keyword) => {
     setCurrentKeyword({
-      ...keyword,
-      angle_id: keyword.angle_id || '', // Assurez-vous d'utiliser la bonne propriété pour l'ID de l'angle
+      keyword_id: keyword.keyword_id,
+      label: keyword.label,
+      angle_id: keyword.fk_angle_id // Assurez-vous que angle_id est bien défini ici
     });
-    setSelectedAngle(keyword.angle_id || ''); // Mettre à jour l'angle sélectionné
     setOpenUpdateModal(true);
   };
   
-
   const handleUpdateKeywordLabelChange = (e) => {
     setCurrentKeyword({ ...currentKeyword, label: e.target.value });
   };
@@ -242,73 +235,33 @@ function Keywords() {
     }
   };
 
-  const handleAddKeywordToAllVerticals = async (keyword) => {
+  const handleUpdateKeyword = async () => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
 
-      for (const vertical of verticals) {
-        const response = await fetch(
-          `${BASE_URL}/${api_version}/verticals/keyword/${vertical.vertical_id}?hp_cs_authorization=${accessToken}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ keyword_id: keyword.keyword_id }),
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to add keyword to vertical ${vertical.vertical_id}`);
-        }
-      }
-      fetchAssignedKeywords();
-      Swal.fire({
-        icon: 'success',
-        text: `Keyword "${keyword.label}" ajouté à tous les verticales avec succès !`,
-        confirmButtonColor: '	#008000',
-      });
-    } catch (error) {
-      console.error('Erreur d`ajout l`keyword à toutes les verticales:', error);
-      Swal.fire({
-        icon: 'error',
-        text: `Erreur d'ajout l'keyword à toutes les verticales: ${error.message}`,
-        confirmButtonColor: '#d33',
-      });
-    }
-  };
-
-  
-  const handleUpdateKeyword = async (keyword_id, updatedLabel) => {
-    try {
-      const token = await getToken();
-      const responseObject = JSON.parse(token);
-      const accessToken = responseObject.access_token;
-      const angleId = currentKeyword.angle_id; // Assuming currentKeyword is correctly set
-  
       const response = await fetch(
-        `${BASE_URL}/${api_version}/keywords/${keyword_id}?hp_cs_authorization=${accessToken}`,
+        `${BASE_URL}/${api_version}/keywords/${currentKeyword.keyword_id}?hp_cs_authorization=${accessToken}`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ label: updatedLabel, angle_id: angleId }),
+          body: JSON.stringify({ label: currentKeyword.label, angle_id: currentKeyword.angle_id }),
         },
       );
-  
+
       if (response.ok) {
         await fetchAllKeywords();
         setOpenUpdateModal(false);
         Swal.fire({
           icon: 'success',
-          text: `Keyword "${updatedLabel}" mis à jour avec succès!`,
+          text: `Keyword "${currentKeyword.label}" mis à jour avec succès!`,
           confirmButtonColor: '#008000',
         });
       } else {
-        const errorResponse = await response.json(); // Parse response for more detailed error message
+        const errorResponse = await response.json(); // Parser la réponse pour un message d'erreur plus détaillé
         throw new Error(`Failed to update keyword: ${errorResponse.message}`);
       }
     } catch (error) {
@@ -320,7 +273,6 @@ function Keywords() {
       });
     }
   };
-  
 
   const handleDeleteKeyword = async (keyword) => {
     const confirmed = await Swal.fire({
@@ -460,7 +412,12 @@ function Keywords() {
       },
     },
   };
-
+  const handleUpdateAngleChange = (selectedOption) => {
+    setCurrentKeyword({
+      ...currentKeyword,
+      angle_id: selectedOption ? selectedOption.value : ''
+    });
+  };
   return (
     <>
       <DashboardCard title="Gestion des Keywords">
@@ -532,42 +489,48 @@ function Keywords() {
         </Box>
       </DashboardCard>
       <Modal
-  open={openUpdateModal}
-  onClose={() => setOpenUpdateModal(false)}
-  aria-labelledby="modal-modal-title"
-  aria-describedby="modal-modal-description"
->
-  <Box sx={style}>
-    <Typography id="modal-modal-title" variant="h6" component="h2">
-      Mettre à jour le mot-clé
-    </Typography>
-    <TextField
-      label="Nom du mot-clé"
-      value={currentKeyword.label}
-      onChange={handleUpdateKeywordLabelChange}
-      fullWidth
-      margin="normal"
-    />
-    <Select
-      value={angles.find(angle => angle.value === currentKeyword.angle_id)}
-      onChange={(selectedOption) => {
-        setCurrentKeyword({ ...currentKeyword, angle_id: selectedOption.value });
-      }}
-      options={angles.map((angle) => ({ value: angle.angle_id, label: angle.angle_label }))}
-      placeholder="Sélectionner un angle"
-      isClearable
-      fullWidth
-    />
-    <Button
-      onClick={() => handleUpdateKeyword(currentKeyword.keyword_id, currentKeyword.label)}
-      variant="contained"
-      color="primary"
-    >
-      Mettre à jour
-    </Button>
-  </Box>
-</Modal>
-
+        open={openUpdateModal}
+        onClose={() => setOpenUpdateModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" mb={5}>
+            Mettre à jour le keyword
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            label="Keyword"
+            variant="outlined"
+            fullWidth
+            value={currentKeyword.label}
+            onChange={(e) => setCurrentKeyword({ ...currentKeyword, label: e.target.value })}
+          />
+           <Select
+            options={angles.map((angle) => ({ value: angle.angle_id, label: angle.angle_label }))}
+            value={
+              angles.find((angle) => angle.angle_id === currentKeyword.angle_id)
+                ? { value: currentKeyword.angle_id, label: angles.find((angle) => angle.angle_id === currentKeyword.angle_id).angle_label }
+                : null
+            }
+            onChange={handleUpdateAngleChange}
+            placeholder="Select Angle"
+          />
+          <Box mt={5} display={'flex'} justifyContent="end">
+            <Button
+              variant="contained"
+              color="error"
+              style={{ marginRight: '10px' }}
+              onClick={() => setOpenUpdateModal(false)}
+            >
+              <Typography>Annuler</Typography>
+            </Button>
+            <Button color="success" variant="contained" onClick={handleUpdateKeyword}>
+              <Typography>Mettre à jour</Typography>
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
 
     </>
   );

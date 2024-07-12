@@ -21,6 +21,7 @@ import DashboardCard from 'src/components/shared/DashboardCard';
 import { FaPlus } from 'react-icons/fa';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Gestionkeywords from './gestion_keywords';
 const style = {
   position: 'absolute',
@@ -36,12 +37,14 @@ const style = {
 function Angles() {
   const [selectedOptions, setSelectedOptions] = useState(null);
   const [verticals, setVerticals] = useState([]);
-  const [keywords, setKeywords] = useState([]);
+  const [Angles, setAngles] = useState([]);
   const [open, setOpen] = useState(false);
-  const [newKeyword, setNewKeyword] = useState('');
+  const [newAngle, setNewAngle] = useState('');
   const [selectedVertical, setSelectedVertical] = useState('');
-  const [assignedKeywords, setAssignedKeywords] = useState([]);
-  const [selectedKeywords, setSelectedKeywords] = useState([]);
+  const [assignedAngles, setAssignedAngles] = useState([]);
+  const [selectedAngles, setSelectedAngles] = useState([]);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [currentAngle, setCurrentAngle] = useState({ angle_id: '', label: '' });
 
   async function getToken() {
     const token = localStorage.getItem('token');
@@ -67,23 +70,23 @@ function Angles() {
     }
   };
 
-  const fetchAllKeywords = async () => {
+  const fetchAllAngles = async () => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
       const response = await fetch(
-        `${BASE_URL}/${api_version}/keywords?hp_cs_authorization=${accessToken}`,
+        `${BASE_URL}/${api_version}/Angles?hp_cs_authorization=${accessToken}`,
       );
       const data = await response.json();
-      setKeywords(data);
+      setAngles(data);
     } catch (error) {
-      console.error('Error fetching keywords:', error);
+      console.error('Error fetching Angles:', error);
       if (error.message === 'Unauthorized') {
         Swal.fire({
           icon: 'error',
           text: 'Votre session a expiré. Veuillez vous reconnecter.',
-          confirmButtonColor: "#d33",
+          confirmButtonColor: '#d33',
         }).then(() => {
           // Redirect to login or clear token
         });
@@ -91,69 +94,69 @@ function Angles() {
     }
   };
 
-  const fetchAssignedKeywords = async () => {
+  const fetchAssignedAngles = async () => {
     if (selectedVertical) {
       try {
         const token = await getToken();
         const responseObject = JSON.parse(token);
         const accessToken = responseObject.access_token;
         const response = await fetch(
-          `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
+          `${BASE_URL}/${api_version}/verticals/angle/${selectedVertical}?hp_cs_authorization=${accessToken}`,
         );
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
-          setAssignedKeywords(data);
+          setAssignedAngles(data);
         } else {
-          setAssignedKeywords([]);
+          setAssignedAngles([]);
         }
       } catch (error) {
-        console.error('Error fetching assigned keywords:', error);
+        console.error('Error fetching assigned Angles:', error);
         if (error.message === 'Unauthorized') {
           Swal.fire({
             icon: 'error',
             text: 'Votre session a expiré. Veuillez vous reconnecter.',
-            confirmButtonColor: "#d33",
+            confirmButtonColor: '#d33',
           }).then(() => {
             // Redirect to login or clear token
           });
         }
       }
     } else {
-      setAssignedKeywords([]);
+      setAssignedAngles([]);
     }
   };
 
   useEffect(() => {
     fetchVerticals();
-    fetchAllKeywords();
+    fetchAllAngles();
   }, []);
 
   useEffect(() => {
-    fetchAssignedKeywords();
+    fetchAssignedAngles();
   }, [selectedVertical]);
 
-  const handleAddKeywordToVertical = async (keyword) => {
+  const handleAddAngleToVertical = async (Angle) => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
       const response = await fetch(
-        `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
+        `${BASE_URL}/${api_version}/verticals/angle/${selectedVertical}?hp_cs_authorization=${accessToken}`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ keyword_id: keyword.keyword_id }),
+          body: JSON.stringify({ angle_id: Angle.angle_id }),
         },
       );
 
       if (response.ok) {
-        setAssignedKeywords((prevKeywords) => [...prevKeywords, keyword]);
+        setAssignedAngles((prevAngles) => [...prevAngles, Angle]);
         Swal.fire({
           icon: 'success',
-          text: `Angel "${keyword.keyword_label}" ajouté avec succés!`,
-          confirmButtonColor: "	#008000",
+          text: `Angel "${Angle.angle_label}" ajouté avec succés!`,
+          confirmButtonColor: '	#008000',
         });
       } else {
         throw new Error('Impossible d`ajouter l`angle à la verticale.');
@@ -163,75 +166,83 @@ function Angles() {
       Swal.fire({
         icon: 'error',
         text: 'L`angle est déjà existe',
-        confirmButtonColor: "#d33",
+        confirmButtonColor: '#d33',
       });
     }
   };
 
-  const handleRemoveKeywordFromVertical = async (keyword) => {
+  const handleRemoveAngleFromVertical = async (Angle) => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
       const accessToken = responseObject.access_token;
       const response = await fetch(
-        `${BASE_URL}/${api_version}/verticals/keyword/${selectedVertical}?hp_cs_authorization=${accessToken}`,
+        `${BASE_URL}/${api_version}/verticals/angle/${selectedVertical}?hp_cs_authorization=${accessToken}`,
         {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ keyword_id: keyword.keyword_id }),
+          body: JSON.stringify({ angle_id: Angle.angle_id }),
         },
       );
 
       if (response.ok) {
-        setAssignedKeywords(assignedKeywords.filter((kw) => kw.keyword_id !== keyword.keyword_id));
+        setAssignedAngles(assignedAngles.filter((kw) => kw.angle_id !== Angle.angle_id));
         Swal.fire({
           icon: 'success',
-          text: `Angel "${keyword.keyword_label}" supprimé avec succés`,
-          confirmButtonColor: "	#008000",
+          text: `Angel "${Angle.angle_label}" supprimé avec succés`,
+          confirmButtonColor: '	#008000',
         });
       } else {
         throw new Error('Impossible de supprimer l`angle de la verticale.');
       }
     } catch (error) {
-      console.error('Error removing keyword from vertical:', error);
+      console.error('Error removing Angle from vertical:', error);
       Swal.fire({
         icon: 'error',
         text: `Erreur de suppression l'angle de la verticale: ${error.message}`,
-        confirmButtonColor: "#d33",
+        confirmButtonColor: '#d33',
       });
     }
   };
+  const handleOpenUpdateModal = (angle) => {
+    setCurrentAngle(angle);
+    setOpenUpdateModal(true);
+  };
 
-  const handleAddNewKeyword = async () => {
-    if (newKeyword.trim()) {
+  const handleUpdateAngleLabelChange = (e) => {
+    setCurrentAngle({ ...currentAngle, label: e.target.value });
+  };
+
+  const handleAddNewAngle = async () => {
+    if (newAngle.trim()) {
       try {
         const token = await getToken();
         const responseObject = JSON.parse(token);
         const accessToken = responseObject.access_token;
         const response = await fetch(
-          `${BASE_URL}/${api_version}/keywords?hp_cs_authorization=${accessToken}`,
+          `${BASE_URL}/${api_version}/Angles?hp_cs_authorization=${accessToken}`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ label: newKeyword.trim() }),
-          }
+            body: JSON.stringify({ label: newAngle.trim() }),
+          },
         );
         if (response.ok) {
           const responseMessage = await response.json();
           console.log('API Response:', responseMessage); // Affiche le message de réponse
-          // Si le message de réponse est "Keyword created", faites une requête supplémentaire
-          if (responseMessage[0] === "Keyword created") {
-            await fetchAllKeywords(); // Rafraîchir la liste des mots-clés
-            setNewKeyword('');
+          // Si le message de réponse est "Angle created", faites une requête supplémentaire
+          if (responseMessage[0] === 'Angle created') {
+            await fetchAllAngles(); // Rafraîchir la liste des mots-clés
+            setNewAngle('');
             setOpen(false);
             Swal.fire({
               icon: 'success',
-              text: `Keyword "${newKeyword.trim()}" ajouté avec succès!`,
-              confirmButtonColor: "	#008000",
+              text: `Angle "${newAngle.trim()}" ajouté avec succès!`,
+              confirmButtonColor: '	#008000',
             });
           } else {
             throw new Error('Réponse inattendue du serveur.');
@@ -244,12 +255,12 @@ function Angles() {
         Swal.fire({
           icon: 'error',
           text: `Erreur lors de l'ajout du nouveau angle: ${error.message}`,
-          confirmButtonColor: "#d33",
+          confirmButtonColor: '#d33',
         });
       }
     }
   };
-  const handleAddKeywordToAllVerticals = async (keyword) => {
+  const handleAddAngleToAllVerticals = async (Angle) => {
     try {
       const token = await getToken();
       const responseObject = JSON.parse(token);
@@ -257,32 +268,68 @@ function Angles() {
 
       for (const vertical of verticals) {
         const response = await fetch(
-          `${BASE_URL}/${api_version}/verticals/keyword/${vertical.vertical_id}?hp_cs_authorization=${accessToken}`,
+          `${BASE_URL}/${api_version}/verticals/angle/${vertical.vertical_id}?hp_cs_authorization=${accessToken}`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ keyword_id: keyword.keyword_id }),
-          }
+            body: JSON.stringify({ angle_id: Angle.angle_id }),
+          },
         );
 
         if (!response.ok) {
-          throw new Error(`Failed to add keyword to vertical ${vertical.vertical_id}`);
+          throw new Error(`Failed to add Angle to vertical ${vertical.vertical_id}`);
         }
       }
-      fetchAssignedKeywords();
+      fetchAssignedAngles();
       Swal.fire({
         icon: 'success',
-        text: `Angle "${keyword.keyword_label}" ajouté à tous les verticales avec succès !`,
-        confirmButtonColor: "	#008000",
+        text: `Angle "${Angle.angle_label}" ajouté à tous les verticales avec succès !`,
+        confirmButtonColor: '	#008000',
       });
     } catch (error) {
       console.error('Erreur d`ajout l`angle à toutes les verticales:', error);
       Swal.fire({
         icon: 'error',
         text: `Erreur d'ajout l'angle à toutes les verticales: ${error.message}`,
-        confirmButtonColor: "#d33",
+        confirmButtonColor: '#d33',
+      });
+    }
+  };
+  const handleUpdateAngle = async (angle_id, updatedLabel) => {
+    try {
+      const token = await getToken();
+      const responseObject = JSON.parse(token);
+      const accessToken = responseObject.access_token;
+      const response = await fetch(
+        `${BASE_URL}/${api_version}/Angles/${angle_id}?hp_cs_authorization=${accessToken}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ label: updatedLabel }),
+        },
+      );
+
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          text: `Angle "${updatedLabel}" mis à jour avec succès!`,
+          confirmButtonColor: '#008000',
+        });
+        fetchAllAngles(); // Refresh the angles list
+        setOpenUpdateModal(false);
+      } else {
+        throw new Error('Échec de la mise à jour de l`angle.');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l`angle:', error);
+      Swal.fire({
+        icon: 'error',
+        text: `Erreur lors de la mise à jour de l'angle: ${error.message}`,
+        confirmButtonColor: '#d33',
       });
     }
   };
@@ -290,17 +337,27 @@ function Angles() {
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
-      field: 'Keywords',
+      field: 'Angles',
       headerName: 'Angles',
       width: 220,
       editable: true,
+    },
+    {
+      field: 'Edit',
+      headerName: 'Edit',
+      width: 100,
+      renderCell: (params) => (
+        <IconButton color="primary" onClick={() => handleOpenUpdateModal(params.row)}>
+          <EditIcon />
+        </IconButton>
+      ),
     },
     {
       field: 'Add',
       headerName: 'Add',
       width: 100,
       renderCell: (params) => (
-        <IconButton color="success" onClick={() => handleAddKeywordToVertical(params.row)}>
+        <IconButton color="success" onClick={() => handleAddAngleToVertical(params.row)}>
           <AddIcon />
         </IconButton>
       ),
@@ -311,7 +368,7 @@ function Angles() {
       width: 120,
       renderCell: (params) => (
         <Button
-          onClick={() => handleAddKeywordToAllVerticals(params.row)}
+          onClick={() => handleAddAngleToAllVerticals(params.row)}
           variant="contained"
           color="success"
         >
@@ -321,11 +378,11 @@ function Angles() {
     },
   ];
 
-  const rows = keywords.map((keyword, index) => ({
-    id: keyword.keyword_id || index.toString(),
-    Keywords: keyword.keyword_label,
-    keyword_id: keyword.keyword_id, // Including keyword_id for easy access
-    keyword_label: keyword.keyword_label,
+  const rows = Angles.map((Angle, index) => ({
+    id: Angle.angle_id || index.toString(),
+    Angles: Angle.angle_label,
+    angle_id: Angle.angle_id, // Including angle_id for easy access
+    label: Angle.angle_label,
   }));
 
   const ITEM_HEIGHT = 30;
@@ -338,7 +395,7 @@ function Angles() {
       },
     },
   };
-  console.log(assignedKeywords);
+  console.log(assignedAngles);
   return (
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
@@ -365,8 +422,8 @@ function Angles() {
                   label="Angle"
                   variant="outlined"
                   fullWidth
-                  value={newKeyword}
-                  onChange={(e) => setNewKeyword(e.target.value)}
+                  value={newAngle}
+                  onChange={(e) => setNewAngle(e.target.value)}
                 />
                 <Box mt={5} display={'flex'} justifyContent="end">
                   <Button
@@ -377,7 +434,7 @@ function Angles() {
                   >
                     <Typography>Annuler</Typography>
                   </Button>
-                  <Button color="success" variant="contained" onClick={handleAddNewKeyword}>
+                  <Button color="success" variant="contained" onClick={handleAddNewAngle}>
                     <Typography>Ajouter</Typography>
                   </Button>
                 </Box>
@@ -430,8 +487,7 @@ function Angles() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {assignedKeywords.length === 1 &&
-                      assignedKeywords[0] === 'No Keywords founded' ? (
+                      {assignedAngles.length === 1 && assignedAngles[0] === 'No Angles founded' ? (
                         <TableRow>
                           <TableCell colSpan={2}>
                             <Typography align="center">
@@ -440,15 +496,15 @@ function Angles() {
                           </TableCell>
                         </TableRow>
                       ) : (
-                        assignedKeywords
-                          .filter((keyword) => keyword.keyword_id && keyword.keyword_label)
-                          .map((keyword) => (
-                            <TableRow key={keyword.keyword_id}>
-                              <TableCell>{keyword.keyword_label}</TableCell>
+                        assignedAngles
+                          .filter((Angle) => Angle.angle_id && Angle.angle_label)
+                          .map((Angle) => (
+                            <TableRow key={Angle.angle_id}>
+                              <TableCell>{Angle.angle_label}</TableCell>
                               <TableCell align="right">
                                 <IconButton
                                   color="error"
-                                  onClick={() => handleRemoveKeywordFromVertical(keyword)}
+                                  onClick={() => handleRemoveAngleFromVertical(Angle)}
                                 >
                                   <DeleteIcon />
                                 </IconButton>
@@ -462,12 +518,50 @@ function Angles() {
               </Box>
             )}
           </DashboardCard>
+          <Modal
+            open={openUpdateModal}
+            onClose={() => setOpenUpdateModal(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2" mb={5}>
+                Mettre à jour l'angle
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                label="Angle"
+                variant="outlined"
+                fullWidth
+                value={currentAngle.label} 
+                onChange={handleUpdateAngleLabelChange} 
+              />
+              <Box mt={5} display={'flex'} justifyContent="end">
+                <Button
+                  variant="contained"
+                  color="error"
+                  style={{ marginRight: '10px' }}
+                  onClick={() => setOpenUpdateModal(false)}
+                >
+                  <Typography>Annuler</Typography>
+                </Button>
+                <Button
+                  color="success"
+                  variant="contained"
+                  onClick={() => handleUpdateAngle(currentAngle.angle_id, currentAngle.label)}
+                >
+                  <Typography>Mettre à jour</Typography>
+                </Button>
+              </Box>
+            </Box>
+          </Modal>
         </Box>
         <Box gridColumn="span 7">
 <Gestionkeywords />
         </Box>
       </Box>
     </Box>
+    
   );
 }
 

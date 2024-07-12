@@ -16,7 +16,8 @@ class Tendance extends React.Component {
             click: (event, chartContext, config) => {
               const clickedIndex = config.dataPointIndex;
               const clickedCategory = this.state.options.xaxis.categories[clickedIndex];
-              this.handleBarClick(clickedCategory);
+              const clickedAngleId = this.state.angleIds[clickedIndex];  // Updated line
+              this.handleBarClick(clickedCategory, clickedAngleId);
             }
           }
         },
@@ -64,6 +65,7 @@ class Tendance extends React.Component {
           },
         }
       },
+      angleIds: [],  // Added line
       showChart: true,
       clickedCategoryData: null
     };
@@ -105,6 +107,7 @@ class Tendance extends React.Component {
 
       const seriesData = data.map(item => parseInt(item.count, 10));
       const categories = data.map(item => item.angle_label || 'Null');
+      const angleIds = data.map(item => item.fk_angle_id);  // Updated line
 
       this.setState({
         series: [{ name: 'ads', data: seriesData }],
@@ -114,6 +117,7 @@ class Tendance extends React.Component {
             categories: categories,
           }
         },
+        angleIds: angleIds,  // Updated line
         showChart: true,
       });
     } catch (error) {
@@ -122,9 +126,8 @@ class Tendance extends React.Component {
     }
   }
 
-  handleBarClick(category) {
-    // Call the parent handler to set the selected category
-    this.props.onCategoryClick(category);
+  handleBarClick(category, angleId) {
+    this.props.onBarClick(category, angleId);
   }
 
   render() {
